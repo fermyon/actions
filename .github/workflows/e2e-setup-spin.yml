@@ -1,0 +1,133 @@
+name: setup-spin e2e tests
+on:
+  pull_request:
+    branches: [main]
+
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19
+      
+      - name: npm install
+        run: npm install
+
+      - name: npm run build
+        run: npm run package
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: setup-spin
+          path: dist/index.js
+
+  setup-default-spin:
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Retrieve saved Github action
+        uses: actions/download-artifact@v3
+        with:
+          name: setup-spin
+          path: dist
+
+      - name: setup spin
+        uses: ./
+
+      - name: verify spin setup
+        run: spin --version
+
+  setup-specific-spin-version:
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Retrieve saved Github action
+        uses: actions/download-artifact@v3
+        with:
+          name: setup-spin
+          path: dist
+
+      - name: setup spin
+        uses: ./
+        with:
+          version: v0.9.0
+
+      - name: spin setup successful
+        if: ${{ contains(env.SPIN_VERSION, '0.9.0') }}
+        run: echo "spin setup successful"
+
+      - name: spin setup failed
+        if: ${{ !contains(env.SPIN_VERSION, '0.9.0') }}
+        run: |
+          echo "expected version: v0.9.0, found: ${SPIN_VERSION}"
+          exit 1
+
+  setup-spin-and-one-plugin:
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Retrieve saved Github action
+        uses: actions/download-artifact@v3
+        with:
+          name: setup-spin
+          path: dist
+
+      - name: setup spin
+        uses: ./
+        with:
+          version: v0.10.0
+          plugins: js2wasm
+
+      - name: verify js2wasm is installed
+        run: spin js2wasm --version 2>ignore
+
+  setup-spin-and-mulitple-plugins:
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Retrieve saved Github action
+        uses: actions/download-artifact@v3
+        with:
+          name: setup-spin
+          path: dist
+
+      - name: setup spin
+        uses: ./
+        with:
+          version: v0.10.0
+          plugins: js2wasm,py2wasm
+
+      - name: verify js2wasm is installed
+        run: spin js2wasm --version 2>ignore
+
+      - name: verify py2wasm is installed
+        run: spin py2wasm --version 2>ignore

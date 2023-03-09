@@ -42,6 +42,6 @@ This section contains a list of all inputs that may be set for this Action.
 | app_config_file       | Optional      | Path to `spin.toml` file  | - |
 | cloud_base_url       | Optional      | cloud base url to use for deploying apps  | [Fermyon Cloud](https://cloud.fermyon.com) |
 | oci_app_reference       | Optional      | if provided, it is used for pushing spin app to oci registry. e.g. ghcr.io/rajatjindal/cloud-start:v0.0.1  | - |
-| deploy       | Optional      | deploys the app to Fermyon cloud  | false |
+| deploy       | Optional      | deploys the app to Fermyon Cloud  | false |
 
 # setup-spin
