@@ -1,0 +1,14 @@
+name: 'Build and deploy Spin app to Fermyon Cloud'
+description: 'Build and deploy Spin app to Fermyon Cloud'
+author: 'Fermyon Engineering'
+inputs:
+  manifest_file:
+    required: false
+    description: 'path to spin.toml file'
+    default: 'spin.toml'
+  fermyon_token:
+    required: false
+    description: 'personal access token for Fermyon Cloud'
+runs:
+  using: 'node16'
+  main: '../../dist/spin/deploy/index.js'

@@ -1,0 +1,121 @@
+name: build-and-push e2e tests
+on:
+  pull_request:
+    branches: [main]
+
+  push:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  REPOSITORY: ${{ github.repository }}
+  SAMPLE_APP_IMAGE_NAME: actions-e2e-test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'fermyon' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19
+      
+      - name: npm install
+        run: npm install
+
+      - name: npm run build
+        run: npm run package
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: spin-actions
+          path: dist/spin/push/index.js
+
+  push-ghcr-io:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Retrieve saved Github action
+        uses: actions/download-artifact@v3
+        with:
+          name: spin-actions
+          path: dist/spin/push/
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: setup spin
+        uses: ./spin/setup/
+        with:
+          version: v0.10.1
+          plugins: js2wasm
+          github_token: ${{ github.token }}
+
+      - name: build and push
+        uses: ./spin/push/
+        with:
+          registry_reference: "${{ env.REGISTRY }}/${{ env.REPOSITORY }}/${{ env.SAMPLE_APP_IMAGE_NAME }}:${{ github.run_id }}"
+          manifest_file: example-app/spin.toml
+
+      - name: verify app was pushed to OCI Registry
+        run: spin registry pull "${{ env.REGISTRY }}/${{ env.REPOSITORY }}/${{ env.SAMPLE_APP_IMAGE_NAME }}:${{ github.run_id }}"
+
+      - uses: bots-house/ghcr-delete-image-action@v1.1.0
+        if: always()
+        with:
+          owner: fermyon
+          ## name: 'actions/actions-e2e-tests'
+          name: "${{ github.event.repository.name }}/${{ env.SAMPLE_APP_IMAGE_NAME }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.run_id }}
+
+  spin-registry-login:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Retrieve saved Github action
+        uses: actions/download-artifact@v3
+        with:
+          name: spin-actions
+          path: dist/spin/push/
+
+      - name: setup spin
+        uses: ./spin/setup/
+        with:
+          version: canary
+          plugins: js2wasm
+          github_token: ${{ github.token }}
+
+      - name: build and push
+        uses: ./spin/push/
+        with:
+          registry: ${{ env.REGISTRY }}
+          registry_username: ${{ github.actor }}
+          registry_password: ${{ secrets.GITHUB_TOKEN }}
+          registry_reference: "${{ env.REGISTRY }}/${{ env.REPOSITORY }}/${{ env.SAMPLE_APP_IMAGE_NAME }}:${{ github.run_id }}-2"
+          manifest_file: example-app/spin.toml
+
+      - name: verify app was pushed to OCI Registry
+        run: spin registry pull "${{ env.REGISTRY }}/${{ env.REPOSITORY }}/${{ env.SAMPLE_APP_IMAGE_NAME }}:${{ github.run_id }}-2"
+
+      - uses: bots-house/ghcr-delete-image-action@v1.1.0
+        if: always()
+        with:
+          owner: fermyon
+          ## name: 'actions/actions-e2e-tests'
+          name: "${{ github.event.repository.name }}/${{ env.SAMPLE_APP_IMAGE_NAME }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: "${{ github.run_id }}-2"

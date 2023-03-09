@@ -5,19 +5,18 @@ import * as sys from './system'
 import * as fs from 'fs-extra'
 import * as toml from 'toml'
 
+export const DEFAULT_APP_CONFIG_FILE = "spin.toml"
+export const CANARY_VERSION = "canary"
+
 export async function install(version: string): Promise<void> {
     await download(version)
 
-    // verify spin setup succeeded or not
     const result = await exec.getExecOutput("spin", ["--version"])
     if (result.exitCode != 0) {
         throw new Error(`failed while verifying spin version.\n[stdout: ${result.stdout}] [stderr: ${result.stderr}]`)
     }
 
-    // remove 'v' from version before verifying
-    if (result.stdout.indexOf(version.replace(/^v/, '')) === -1) {
-        throw new Error(`expected version ${version}, found ${result.stdout}`)
-    }
+    core.info(result.stdout)
     core.exportVariable("SPIN_VERSION", result.stdout)
 }
 
@@ -47,8 +46,8 @@ export async function build_cmd(cmd: string): Promise<void> {
     await exec.exec(cmd)
 }
 
-export async function build(appConfigFile: string): Promise<void> {
-    await exec.exec('spin', ['build', '-f', appConfigFile])
+export async function build(manifestFile: string): Promise<void> {
+    await exec.exec('spin', ['build', '-f', manifestFile])
 }
 
 async function pullPluginManifests(): Promise<void> {
@@ -66,11 +65,17 @@ async function installOnePlugin(plugin: string): Promise<void> {
     }
 }
 
-export async function registryPush(oci_app_reference: string, appConfigFile: string): Promise<void> {
-    await exec.exec('spin', ['registry', 'push', '-f', appConfigFile, oci_app_reference])
+export async function registryLogin(registry: string, username: string, password: string): Promise<void> {
+    await exec.exec('spin', ['registry', 'login', registry, '--username', username, "--password-stdin"], {
+        input: Buffer.from(password)
+    })
 }
 
-export class SpinAppConfig {
+export async function registryPush(registry_reference: string, manifestFile: string): Promise<void> {
+    await exec.exec('spin', ['registry', 'push', '-f', manifestFile, registry_reference])
+}
+
+export class SpinAppManifest {
     name: string
 
     constructor(name: string) {
@@ -78,8 +83,8 @@ export class SpinAppConfig {
     }
 }
 
-export function getAppConfig(appConfigFile: string): SpinAppConfig {
+export function getAppManifest(manifestFile: string): SpinAppManifest {
     let token: string = '';
-    const data = fs.readFileSync(appConfigFile, "utf8");
+    const data = fs.readFileSync(manifestFile, "utf8");
     return toml.parse(data);
 }

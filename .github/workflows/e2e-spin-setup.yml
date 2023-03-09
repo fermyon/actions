@@ -28,11 +28,12 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: setup-spin
-          path: dist/index.js
+          path: dist/spin/setup/index.js
 
   setup-default-spin:
     needs: build
     runs-on: ${{ matrix.os }}
+    if: ${{ github.repository_owner == 'fermyon' }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -43,10 +44,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: setup-spin
-          path: dist
+          path: dist/spin/setup/
 
       - name: setup spin
-        uses: ./
+        uses: ./spin/setup/
+        with:
+          github_token: ${{ github.token }}
 
       - name: verify spin setup
         run: spin --version
@@ -54,6 +57,7 @@ jobs:
   setup-specific-spin-version:
     needs: build
     runs-on: ${{ matrix.os }}
+    if: ${{ github.repository_owner == 'fermyon' }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -64,12 +68,13 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: setup-spin
-          path: dist
+          path: dist/spin/setup/
 
       - name: setup spin
-        uses: ./
+        uses: ./spin/setup/
         with:
           version: v0.9.0
+          github_token: ${{ github.token }}
 
       - name: spin setup successful
         if: ${{ contains(env.SPIN_VERSION, '0.9.0') }}
@@ -84,6 +89,7 @@ jobs:
   setup-spin-and-one-plugin:
     needs: build
     runs-on: ${{ matrix.os }}
+    if: ${{ github.repository_owner == 'fermyon' }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -94,20 +100,22 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: setup-spin
-          path: dist
+          path: dist/spin/setup/
 
       - name: setup spin
-        uses: ./
+        uses: ./spin/setup/
         with:
           version: v0.10.0
           plugins: js2wasm
+          github_token: ${{ github.token }}
 
       - name: verify js2wasm is installed
         run: spin js2wasm --version 2>ignore
 
-  setup-spin-and-mulitple-plugins:
+  setup-spin-and-multiple-plugins:
     needs: build
     runs-on: ${{ matrix.os }}
+    if: ${{ github.repository_owner == 'fermyon' }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -118,13 +126,14 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: setup-spin
-          path: dist
+          path: dist/spin/setup/
 
       - name: setup spin
-        uses: ./
+        uses: ./spin/setup/
         with:
           version: v0.10.0
           plugins: js2wasm,py2wasm
+          github_token: ${{ github.token }}
 
       - name: verify js2wasm is installed
         run: spin js2wasm --version 2>ignore
