@@ -24,4 +24,4 @@ jobs:
 
       - uses: JasonEtco/build-and-tag-action@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_FOR_RELEASE }}
+          GITHUB_TOKEN: ${{ github.token }}

@@ -1,6 +1,6 @@
 {
   "name": "setup-spin",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "description": "This action setup fermyon/spin",
   "main": "dist/index.js",
@@ -9,7 +9,7 @@
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
-    "package": "ncc build -o dist src/index.ts",
+    "package": "ncc build -o dist/spin/setup src/setup.ts && ncc build -o dist/spin/push src/push.ts && ncc build -o dist/spin/deploy src/deploy.ts",
     "test": "jest",
     "all": "npm run build && npm run format && npm run package"
   },
@@ -28,15 +28,17 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/exec": "^1.1.1",
+    "@actions/github": "^5.1.1",
     "@actions/tool-cache": "^2.0.1",
+    "@octokit/rest": "^19.0.7",
     "@types/fs-extra": "^11.0.1",
     "@types/mustache": "^4.2.2",
     "@types/uuid": "^9.0.1",
+    "configurator": "engineerd/configurator",
     "fs-extra": "^11.1.0",
     "moment": "^2.29.4",
     "toml": "^3.0.0",
-    "uuid": "^9.0.0",
-    "configurator": "engineerd/configurator"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.0",

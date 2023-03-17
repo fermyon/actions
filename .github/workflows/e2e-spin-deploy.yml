@@ -1,0 +1,57 @@
+name: deploy spin app e2e tests
+on:
+  pull_request:
+    branches: [main]
+
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'fermyon' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19
+      
+      - name: npm install
+        run: npm install
+
+      - name: npm run build
+        run: npm run package
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: spin-actions
+          path: dist/spin/deploy/index.js
+
+  deploy-fermyon-cloud:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Retrieve saved Github action
+        uses: actions/download-artifact@v3
+        with:
+          name: spin-actions
+          path: dist/spin/deploy/
+
+      - name: setup spin
+        uses: ./spin/setup/
+        with:
+          version: canary
+          plugins: js2wasm
+          github_token: ${{ github.token }}
+
+      - name: build and deploy
+        uses: ./spin/deploy/
+        with:
+          fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
+          manifest_file: example-app/spin.toml

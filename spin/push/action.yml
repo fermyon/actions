@@ -1,0 +1,23 @@
+name: 'Build and push Fermyon Spin app'
+description: 'Build and push your Fermyon Spin app to OCI Registry'
+author: 'Fermyon Engineering'
+inputs:
+  manifest_file:
+    required: false
+    description: 'path to spin.toml file'
+    default: 'spin.toml'
+  registry_reference:
+    required: true
+    description: 'OCI Registry reference, e.g. ghcr.io/fermyon/cloud-start:v0.0.1. Learn more at https://developer.fermyon.com/spin/spin-oci'
+  registry:
+    required: false
+    description: 'Server address of OCI registry'
+  registry_username:
+    required: false
+    description: 'OCI Registry Username'
+  registry_password:
+    required: false
+    description: 'OCI Registry password or personal access token'
+runs:
+  using: 'node16'
+  main: '../../dist/spin/push/index.js'

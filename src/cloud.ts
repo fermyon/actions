@@ -1,13 +1,15 @@
 import * as exec from '@actions/exec'
 import * as spin from './spin'
 
-export async function login(cloudBaseURL: string, token: string): Promise<void> {
-    await exec.exec('spin', ['cloud', 'login', '--url', cloudBaseURL, '--token', token])
+export const DEFAULT_CLOUD_URL = "https://cloud.fermyon.com"
+
+export async function login(token: string): Promise<void> {
+    await exec.exec('spin', ['cloud', 'login', '--token', token])
 }
 
-export async function deploy(appConfigFile: string): Promise<Metadata> {
-    const manifest = spin.getAppConfig(appConfigFile)
-    const result = await exec.getExecOutput("spin", ["deploy", "-f", appConfigFile])
+export async function deploy(manifestFile: string): Promise<Metadata> {
+    const manifest = spin.getAppManifest(manifestFile)
+    const result = await exec.getExecOutput("spin", ["deploy", "-f", manifestFile])
     if (result.exitCode != 0) {
         throw new Error(`deploy failed with [status_code: ${result.exitCode}] [stdout: ${result.stdout}] [stderr: ${result.stderr}] `)
     }

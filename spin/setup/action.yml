@@ -1,0 +1,17 @@
+name: 'Setup Fermyon Spin'
+description: 'Set up your GitHub Actions workflow with a specific version of spin'
+author: 'Fermyon Engineering'
+inputs:
+  version:
+    required: false
+    description: 'version of Spin to setup'
+    default: latest
+  plugins:
+    required: false
+    description: 'comma separated list of plugins to install'
+  github_token:
+    required: false
+    description: 'When downloading Spin, GitHub may rate limit anonymous downloads. Set this to use authenticated downloads, which are are subject to a higher limits.'
+runs:
+  using: 'node16'
+  main: '../../dist/spin/setup/index.js'
