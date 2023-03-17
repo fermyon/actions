@@ -1,4 +1,4 @@
-# GitHub Action: fermyon/setup-spin
+# GitHub Actions for Fermyon/Spin: fermyon/actions
 
 The `fermyon/actions` is a collection of Github actions to enable running [spin](https://github.com/fermyon/spin) commands in your GitHub Actions workflow.
 
@@ -7,7 +7,6 @@ It enables the following usecases:
 - setup spin and plugins (`fermyon/actions/spin/setup`)
 - build and push to OCI registry (`fermyon/actions/spin/push`)
 - deploy to Fermyon Cloud (`fermyon/actions/spin/deploy`)
-
 
 ## `fermyon/action/spin/setup`
 

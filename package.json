@@ -1,9 +1,7 @@
 {
-  "name": "setup-spin",
+  "name": "actions",
   "version": "1.0.0",
-  "private": true,
-  "description": "This action setup fermyon/spin",
-  "main": "dist/index.js",
+  "description": "This provide actions for spin setup, build and push of spin apps, deploy to Fermyon Cloud",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write '**/*.ts'",
@@ -15,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rajatjindal/setup-spin.git"
+    "url": "git+https://github.com/fermyon/actions.git"
   },
   "keywords": [
     "actions",
@@ -23,20 +21,17 @@
     "setup",
     "spin"
   ],
-  "author": "",
-  "license": "MIT",
+  "author": "Fermyon Engineering",
+  "license": "Apache-2.0",
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/exec": "^1.1.1",
-    "@actions/github": "^5.1.1",
+    "@actions/io": "^1.1.3",
     "@actions/tool-cache": "^2.0.1",
     "@octokit/rest": "^19.0.7",
     "@types/fs-extra": "^11.0.1",
-    "@types/mustache": "^4.2.2",
     "@types/uuid": "^9.0.1",
-    "configurator": "engineerd/configurator",
     "fs-extra": "^11.1.0",
-    "moment": "^2.29.4",
     "toml": "^3.0.0",
     "uuid": "^9.0.0"
   },
@@ -48,7 +43,6 @@
     "eslint-plugin-github": "^4.3.2",
     "eslint-plugin-jest": "^25.3.2",
     "jest": "^27.2.5",
-    "js-yaml": "^4.1.0",
     "prettier": "2.8.4",
     "ts-jest": "^27.1.2",
     "typescript": "^4.9.5"
