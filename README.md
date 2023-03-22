@@ -1,4 +1,4 @@
-# fermyon/actions - GitHub Action collection for Spin and Fermyon Cloud
+# `fermyon/actions` - GitHub Action collection for Spin and Fermyon Cloud
 
 With the `fermyon/actions` collection, you can incorporate [Spin](https://developer.fermyon.com/spin/index) and [Fermyon Cloud](https://developer.fermyon.com/cloud/index) in your [GitHub Action](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/configuring-a-workflow). 
 
