@@ -4,8 +4,8 @@ With the `fermyon/actions` collection, you can incorporate [Spin](https://develo
 
 This collection of Actions enables the following use cases:
 
-- [x] setup Spin CLI and plugins using [`fermyon/actions/spin/setup`](##-`fermyon/actions/spin/push`)
-- [x] build and push your Spin app to an OCI registry using (`fermyon/actions/spin/push`)[##-`fermyon/actions/spin/push`]
+- [x] setup Spin CLI and plugins using [`fermyon/actions/spin/setup`](#install-spin-cli-and-plugins---fermyonactionspinsetup)
+- [x] build and push your Spin app to an OCI registry using [`fermyon/actions/spin/push`](##-`fermyon/actions/spin/push`)
 - [x] deploy your Spin app to Fermyon Cloud using (`fermyon/actions/spin/deploy`)[##-`fermyon/actions/spin/deploy`]
 
 Let's take a look at each one to learn about the required inputs and walk through an example. 
@@ -89,7 +89,7 @@ jobs:
         run: "spin --version"
 ```
 
-## `fermyon/action/spin/push`
+## Push Spin app to an OCI Registry - `fermyon/action/spin/push`
 
 Build and push the `spin` app to your desired OCI Registry (note that this registry must have a publicly accessible endpoint)
 
@@ -142,7 +142,7 @@ jobs:
 
 
 
-## `fermyon/action/spin/deploy`
+## Deploy Spin app to Fermyon Cloud - `fermyon/action/spin/deploy`
 
 Build and deploy the `spin` app to Fermyon Cloud.
 
