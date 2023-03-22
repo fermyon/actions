@@ -1,12 +1,12 @@
-# fermyon/actions - GitHub Actions for Spin and Fermyon Cloud
+# fermyon/actions - GitHub Action collection for Spin and Fermyon Cloud
 
-Now with `fermyon/actions`, you can incorporate [Spin](https://developer.fermyon.com/spin/index) and [Fermyon Cloud](https://developer.fermyon.com/cloud/index) in your [GitHub Action](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/configuring-a-workflow) workflow. 
+With the `fermyon/actions` collection, you can incorporate [Spin](https://developer.fermyon.com/spin/index) and [Fermyon Cloud](https://developer.fermyon.com/cloud/index) in your [GitHub Action](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/configuring-a-workflow). 
 
 This collection of Actions enables the following use cases:
 
-- [x] setup Spin CLI and plugins ([`fermyon/actions/spin/setup`])
-- [x] build and push your Spin app to an OCI registry (`fermyon/actions/spin/push`)
-- [x] deploy your Spin app to Fermyon Cloud (`fermyon/actions/spin/deploy`)
+- [x] setup Spin CLI and plugins using (`fermyon/actions/spin/setup`)[##-`fermyon/actions/spin/push`]
+- [x] build and push your Spin app to an OCI registry using (`fermyon/actions/spin/push`)[##-`fermyon/actions/spin/push`]
+- [x] deploy your Spin app to Fermyon Cloud using (`fermyon/actions/spin/deploy`)[##-`fermyon/actions/spin/deploy`]
 
 Let's take a look at each one to learn about the required inputs and walk through an example. 
 
@@ -16,11 +16,11 @@ setup `spin` with optional plugins
 
 ### Inputs
 
-| Name         | Required | Description                                                                                                                                   | Default |
-| ------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| version      | Optional | The version of `spin` to install. Supports [semver](https://www.npmjs.com/package/semver) versioning                                          | latest  |
-| plugins      | Optional | The comma-separated list of `spin plugins` to install                                                                                         | -       |
-| github_token | Optional | The `GitHub` token for querying/downloading `spin` releases. If provided, it avoids Github api rate limiting during Github actions executions | -       |
+| Name         | Required | Default | Description                                                                                                                                   |
+| ------------ | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| version      | False | latest       | The version of `spin` to install. Supports [semver](https://www.npmjs.com/package/semver) versioning                                          |
+| plugins      | False | -       | The comma-separated list of `spin plugins` to install. You can learn more about Spin plugins [here](https://github.com/fermyon/spin-plugins)                                                                                         |
+| github_token | False | -       | The `GitHub` token for querying/downloading `spin` releases. If provided, it avoids Github api rate limiting during Github actions executions |
 
 ### Examples
 
@@ -66,7 +66,7 @@ jobs:
         run: "spin --version"
 ```
 
-#### Setting up `spin` and additionally installing spin plugins
+#### Setting up `spin` along with additional plugins
 
 ```yaml
 name: spin
@@ -91,17 +91,17 @@ jobs:
 
 ## `fermyon/action/spin/push`
 
-Build and push the `spin` app to Registry
+Build and push the `spin` app to your desired OCI Registry (note that this registry must have a publicly accessible endpoint)
 
 ### Inputs
 
-| Name               | Required | Description                                                                | Default   |
-| ------------------ | -------- | -------------------------------------------------------------------------- | --------- |
-| registry_reference | Required | Push the spin app to OCI Registry. e.g. ghcr.io/fermyon/cloud-start:v0.0.1 | -         |
-| manifest_file      | Optional | Path to `spin.toml`                                                        | spin.toml |
-| registry           | Optional | if provided, used to login to OCI Registry                                 | -         |
-| registry_username  | Optional | if provided, used to login to OCI Registry                                 | -         |
-| registry_password  | Optional | if provided, used to login to OCI Registry                                 | -         |
+| Name               | Required |  Default   |Description                                                                |
+| ------------------ | -------- | --------- | -------------------------------------------------------------------------- |
+| registry_reference | True | -         | Push the spin app to your desired OCI Registry. e.g. ghcr.io/fermyon/cloud-start:v0.0.1 |
+| manifest_file      | False | spin.toml | Path to `spin.toml`                                                        |
+| registry           | False | -         | if provided, used to login to OCI Registry                                 |
+| registry_username  | False | -         | if provided, used to login to OCI Registry                                 |
+| registry_password  | False | -         | if provided, used to login to OCI Registry                                 |
 
 ### Example
 
@@ -144,14 +144,14 @@ jobs:
 
 ## `fermyon/action/spin/deploy`
 
-Build and deploy the `spin` app to Fermyon Cloud
+Build and deploy the `spin` app to Fermyon Cloud.
 
 ### Inputs
 
-| Name          | Required | Description                                                                       | Default   |
-| ------------- | -------- | --------------------------------------------------------------------------------- | --------- |
-| fermyon_token | Required | Fermyon Cloud Personal access token for deploying the `spin` app to Fermyon Cloud | -         |
-| manifest_file | Optional | Path to `spin.toml`. Used with the `build`/`deploy` command.                      | spin.toml |
+| Name          | Required | Default   | Description                                                                       |
+| ------------- | -------- | --------- |  --------------------------------------------------------------------------------- |
+| fermyon_token | True | -         | Fermyon Cloud Personal access token for deploying the `spin` app to Fermyon Cloud |
+| manifest_file | False | spin.toml | Path to `spin.toml`. Used with the `build`/`deploy` command.                      |
 
 ### Example
 
