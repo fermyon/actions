@@ -6,7 +6,7 @@ This collection of Actions enables the following use cases:
 
 - [x] setup Spin CLI and plugins using [`fermyon/actions/spin/setup`](#install-spin-cli-and-plugins---fermyonactionspinsetup)
 - [x] build and push your Spin app to an OCI registry using [`fermyon/actions/spin/push`](#push-spin-app-to-an-oci-registry---fermyonactionspinpush)
-- [x] deploy your Spin app to Fermyon Cloud using [`fermyon/actions/spin/deploy`]()
+- [x] deploy your Spin app to Fermyon Cloud using [`fermyon/actions/spin/deploy`](#deploy-spin-app-to-fermyon-cloud---fermyonactionspindeploy)
 
 Let's take a look at each one to learn about the required inputs and walk through an example. 
 
