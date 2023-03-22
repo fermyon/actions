@@ -4,13 +4,13 @@ With the `fermyon/actions` collection, you can incorporate [Spin](https://develo
 
 This collection of Actions enables the following use cases:
 
-- [x] setup Spin CLI and plugins using (`fermyon/actions/spin/setup`)[##-`fermyon/actions/spin/push`]
+- [x] setup Spin CLI and plugins using [`fermyon/actions/spin/setup`](##-`fermyon/actions/spin/push`)
 - [x] build and push your Spin app to an OCI registry using (`fermyon/actions/spin/push`)[##-`fermyon/actions/spin/push`]
 - [x] deploy your Spin app to Fermyon Cloud using (`fermyon/actions/spin/deploy`)[##-`fermyon/actions/spin/deploy`]
 
 Let's take a look at each one to learn about the required inputs and walk through an example. 
 
-## `fermyon/action/spin/setup`
+## Install Spin CLI and Plugins - `fermyon/action/spin/setup`
 
 setup `spin` with optional plugins
 
