@@ -1,12 +1,14 @@
-# GitHub Actions for Fermyon/Spin: fermyon/actions
+# fermyon/actions - GitHub Actions for Spin and Fermyon Cloud
 
-The `fermyon/actions` is a collection of Github actions to enable running [spin](https://github.com/fermyon/spin) commands in your GitHub Actions workflow.
+Now with `fermyon/actions`, you can incorporate [Spin](https://developer.fermyon.com/spin/index) and [Fermyon Cloud](https://developer.fermyon.com/cloud/index) in your [GitHub Action](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/configuring-a-workflow) workflow. 
 
-It enables the following usecases:
+This collection of Actions enables the following use cases:
 
-- setup spin and plugins (`fermyon/actions/spin/setup`)
-- build and push to OCI registry (`fermyon/actions/spin/push`)
-- deploy to Fermyon Cloud (`fermyon/actions/spin/deploy`)
+- [x] setup Spin CLI and plugins ([`fermyon/actions/spin/setup`])
+- [x] build and push your Spin app to an OCI registry (`fermyon/actions/spin/push`)
+- [x] deploy your Spin app to Fermyon Cloud (`fermyon/actions/spin/deploy`)
+
+Let's take a look at each one to learn about the required inputs and walk through an example. 
 
 ## `fermyon/action/spin/setup`
 
