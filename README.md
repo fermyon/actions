@@ -1,4 +1,4 @@
-# GitHub Actions for Fermyon/Spin: fermyon/actions
+# GitHub Actions for Fermyon Cloud/Spin apps
 
 The `fermyon/actions` is a collection of Github actions to enable running [spin](https://github.com/fermyon/spin) commands in your GitHub Actions workflow.
 
@@ -7,6 +7,7 @@ It enables the following usecases:
 - setup spin and plugins (`fermyon/actions/spin/setup`)
 - build and push to OCI registry (`fermyon/actions/spin/push`)
 - deploy to Fermyon Cloud (`fermyon/actions/spin/deploy`)
+- deploy PR preview to Fermyon Cloud (`fermyon/actions/spin/preview`)
 
 ## `fermyon/action/spin/setup`
 
@@ -178,4 +179,50 @@ jobs:
         with:
           manifest_file: example-app/spin.toml
           fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
+```
+
+
+## `fermyon/action/spin/preview`
+
+Build and deploy the `spin` app preview to Fermyon Cloud
+
+### Inputs
+
+| Name          | Required | Description                                                                       | Default   |
+| ------------- | -------- | --------------------------------------------------------------------------------- | --------- |
+| fermyon_token | Required | Fermyon Cloud Personal access token for deploying the `spin` app to Fermyon Cloud | -         |
+| manifest_file | Optional | Path to `spin.toml`. Used with the `build`/`deploy` command.                      | spin.toml |
+| github_token  | Required | The `GitHub` token for updating comment on PR                                     | -         |
+| undeploy      | Optional | If true, removes the preview deployment from Fermyon Cloud                        | -         |
+
+### Example
+
+```yaml
+name: spin
+
+on:
+  pull_request:
+    branches: ["main", "v*"]
+    types: ['opened', 'synchronize', 'reopened', 'closed']
+
+jobs:
+  spin:
+    runs-on: ubuntu-latest
+    name: Build and deploy
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup `spin`
+        uses: fermyon/actions/spin/setup@v1
+        with:
+          version: canary
+          plugins: js2wasm
+
+      - name: build and deploy
+        uses: fermyon/actions/spin/preview@v1
+        with:
+          manifest_file: example-app/spin.toml
+          fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          undeploy: ${{ github.event.pull_request && github.event.action == 'closed' }}
 ```
