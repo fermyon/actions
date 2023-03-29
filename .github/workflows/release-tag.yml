@@ -1,0 +1,22 @@
+name: Tag the new release
+on:  
+  push:
+    tags: "v[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  build:
+    permissions:
+      contents: write
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: |
+          echo "GITHUB_REF is $GITHUB_REF"
+
+          MAJOR_TAG=$(echo -n $GITHUB_REF | sed -e "s/^refs\/tags\/\(v[0-9]\+\)\.[0-9]\+.[0-9]\+$/\1/g")
+          [[ "$MAJOR_TAG" =~ ^v[0-9]+$ ]] || (echo "$MAJOR_TAG does not seem like a valid major tag" && exit 1)
+
+          echo "creating (or moving) major tag $MAJOR_TAG to commit sha $GITHUB_SHA"
+          git tag -f $MAJOR_TAG && git push -f origin tags/$MAJOR_TAG
