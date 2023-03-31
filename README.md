@@ -4,13 +4,13 @@ With the `fermyon/actions` collection, you can incorporate [Spin](https://develo
 
 This collection of Actions enables the following use cases:
 
-- [x] set up Spin CLI and plugins using [`fermyon/actions/spin/setup`](#install-spin-cli-and-plugins---fermyonactionspinsetup)
-- [x] build and push your Spin app to an OCI registry using [`fermyon/actions/spin/push`](#push-spin-app-to-an-oci-registry---fermyonactionspinpush)
-- [x] deploy your Spin app to Fermyon Cloud using [`fermyon/actions/spin/deploy`](#deploy-spin-app-to-fermyon-cloud---fermyonactionspindeploy)
+- [x] set up Spin CLI and plugins using [`fermyon/actions/spin/setup@v1`](#install-spin-cli-and-plugins---fermyonactionsspinsetupv1)
+- [x] build and push your Spin app to an OCI registry using [`fermyon/actions/spin/push@v1`](#push-spin-app-to-an-oci-registry---fermyonactionsspinpushv1)
+- [x] deploy your Spin app to Fermyon Cloud using [`fermyon/actions/spin/deploy@v1`](#deploy-spin-app-to-fermyon-cloud---fermyonactionsspindeployv1)
 
 Let's take a look at each one to learn about the required inputs and walk through an example. 
 
-## Install Spin CLI and Plugins - `fermyon/action/spin/setup`
+## Install Spin CLI and Plugins - `fermyon/actions/spin/setup@v1`
 
 setup `spin` with optional plugins
 
@@ -89,9 +89,9 @@ jobs:
         run: "spin --version"
 ```
 
-## Push Spin app to a Registry - `fermyon/action/spin/push`
+## Push Spin app to a Registry - `fermyon/actions/spin/push`
 
-Build and push the `spin` app to your desired OCI Registry (note that this registry must have a publicly accessible endpoint)
+Build and push the `spin` app to your desired OCI Registry (note that this registry must have a publicly accessible endpoint). Also note this action has a prerequisite on Spin already being installed. 
 
 ### Inputs
 
@@ -142,7 +142,7 @@ jobs:
 
 
 
-## Deploy Spin app to Fermyon Cloud - `fermyon/action/spin/deploy`
+## Deploy Spin app to Fermyon Cloud - `fermyon/actions/spin/deploy@v1`
 
 Build and deploy the Spin app to Fermyon Cloud.
 
@@ -151,7 +151,7 @@ Build and deploy the Spin app to Fermyon Cloud.
 | Name          | Required | Default   | Description                                                                       |
 | ------------- | -------- | --------- |  --------------------------------------------------------------------------------- |
 | fermyon_token | True | -         | Fermyon Cloud Personal Access Token for deploying the `spin` app to Fermyon Cloud |
-| manifest_file | False | spin.toml | Path to `spin.toml`. Used with the `build`/`deploy` command.                      |
+| manifest_file | False | spin.toml | Path to `spin.toml`. 
 
 ### Example
 
