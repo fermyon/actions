@@ -1,0 +1,20 @@
+name: 'Build and deploy preview of Spin app to Fermyon Cloud'
+description: 'Build and deploy preview of Spin app to Fermyon Cloud'
+author: 'Fermyon Engineering'
+inputs:
+  manifest_file:
+    required: false
+    description: 'path to spin.toml file'
+    default: 'spin.toml'
+  fermyon_token:
+    required: true
+    description: 'the token that will be used for deploying preview to Fermyon Cloud'
+  github_token:
+    required: true
+    description: 'the token will be used to update preview URL on Github PR'
+  undeploy:
+    required: false
+    description: 'if true, remove the preview deployment from Fermyon Cloud'  
+runs:
+  using: 'node16'
+  main: '../../dist/spin/preview/index.js'

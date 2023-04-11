@@ -1,7 +1,93 @@
+import * as core from '@actions/core'
+import * as httpm from '@actions/http-client'
 import * as exec from '@actions/exec'
+import * as io from '@actions/io'
+import * as fs from 'fs-extra'
 import * as spin from './spin'
+import * as path from 'path'
 
 export const DEFAULT_CLOUD_URL = "https://cloud.fermyon.com"
+
+export function initClient(token: string): Client {
+    return new Client(token)
+}
+
+export class GetAppsResp {
+    items: Array<App>
+    constructor(items: Array<App>) {
+        this.items = items
+    }
+}
+
+export class App {
+    id: string
+    name: string
+
+    constructor(id: string, name: string) {
+        this.id = id
+        this.name = name
+    }
+}
+
+export class Route {
+    name: string
+    routeUrl: string
+    wildcard: boolean
+
+    constructor(name: string, routeUrl: string, wildcard: boolean) {
+        this.name = name
+        this.routeUrl = routeUrl
+        this.wildcard = wildcard
+    }
+}
+
+export class Client {
+    base: string
+    token: string
+    _httpclient: httpm.HttpClient
+
+    constructor(token: string) {
+        this.base = DEFAULT_CLOUD_URL
+        this.token = token
+        this._httpclient = new httpm.HttpClient("fermyon/actions", [], {
+            headers: {
+                Authorization: `Bearer ${this.token}`
+            }
+        })
+    }
+
+    async getAllApps(): Promise<App[]> {
+        const resp = await this._httpclient.get(`${this.base}/api/apps`)
+        if (resp.message.statusCode !== httpm.HttpCodes.OK) {
+            throw `expexted code ${httpm.HttpCodes.OK}, got ${resp.message.statusCode}`
+        }
+
+        const appsResp: GetAppsResp = JSON.parse(await resp.readBody())
+        return appsResp.items;
+    }
+
+    async getAppIdByName(name: string): Promise<string> {
+        let apps = await this.getAllApps()
+        const app = apps.find(item => item.name === name);
+        if (!app) {
+            throw `no app found with name ${name}`
+        }
+
+        return app.id;
+    }
+
+    async deleteAppById(id: string): Promise<void> {
+        const resp = await this._httpclient.get(`${this.base}/api/apps`)
+        if (resp.message.statusCode !== httpm.HttpCodes.OK) {
+            throw `expected code ${httpm.HttpCodes.OK}, got ${resp.message.statusCode}`
+        }
+    }
+
+    async deleteAppByName(name: string): Promise<void> {
+        let appId = await this.getAppIdByName(name)
+        this.deleteAppById(appId)
+    }
+}
 
 export async function login(token: string): Promise<void> {
     await exec.exec('spin', ['cloud', 'login', '--token', token])
@@ -17,16 +103,17 @@ export async function deploy(manifestFile: string): Promise<Metadata> {
     return extractMetadataFromLogs(manifest.name, result.stdout)
 }
 
-export class Route {
-    name: string
-    routeUrl: string
-    wildcard: boolean
+export async function deployAs(appName: string, manifestFile: string): Promise<Metadata> {
+    const manifest = spin.getAppManifest(manifestFile)
+    const previewTomlFile = path.join(path.dirname(manifestFile), `${appName}-spin.toml`)
+    await io.cp(manifestFile, previewTomlFile)
 
-    constructor(name: string, routeUrl: string, wildcard: boolean) {
-        this.name = name
-        this.routeUrl = routeUrl
-        this.wildcard = wildcard
-    }
+    const data = fs.readFileSync(previewTomlFile, 'utf8');
+    const re = new RegExp(`name = "${manifest.name}"`, "g")
+    var result = data.replace(re, `name = "${appName}"`);
+    fs.writeFileSync(previewTomlFile, result, 'utf8');
+
+    return deploy(previewTomlFile)
 }
 
 export class Metadata {
