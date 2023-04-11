@@ -21,7 +21,7 @@ setup `spin` with optional plugins
 
 | Name         | Required | Default | Description                                                                                                                                   |
 | ------------ | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| version      | False | latest       | The version of `spin` to install. Supports [semver](https://www.npmjs.com/package/semver) versioning                                          |
+| version      | False | latest       | The version of `spin` to install.                                         |
 | plugins      | False | -       | The comma-separated list of Spin plugins to install. [Learn more about Spin plugins.](https://developer.fermyon.com/spin/managing-plugins)                                                                                         |
 | github_token | False | -       | The GitHub token for querying/downloading `spin` releases. If provided, it avoids GitHub API rate limiting during GitHub actions executions |
 
