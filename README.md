@@ -185,7 +185,7 @@ jobs:
 
 Build and deploy the Spin app preview to Fermyon Cloud.
 
-The preview lifecycle is typically to deploy a preview when a pull request is created or updated, and to remove it when the PR is closed. To do this, create a workflow whose trigger is (list of actions), and set the preview action's undeploy flag to (appropriate formula). The undeploy flag will thus resolve to false (deploy a preview, or update the existing preview) on PR creation or update, and to true (remove the preview) on PR closure. See below for an example.
+The preview lifecycle is typically to deploy a preview when a pull request is created or updated, and to remove it when the PR is closed. To do this, create a workflow whose trigger is `pull_request` with activity types `['opened', 'synchronize', 'reopened', 'closed']`, and set the preview action's `undeploy` flag to `${{ github.event.pull_request && github.event.action == 'closed' }}`. The undeploy flag will thus resolve to false (deploy a preview, or update the existing preview) on PR creation or update, and to true (remove the preview) on PR closure. See below for an example.
 
 If you have multiple PRs in flight, the action 'knows' which preview is associated with which PR, and will update or remove only that preview.
 
