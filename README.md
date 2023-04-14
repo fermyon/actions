@@ -183,11 +183,13 @@ jobs:
 
 ## Deploy preview of Spin app to Fermyon Cloud - `fermyon/actions/spin/preview@v1`
 
-Build and deploy the Spin app preview to Fermyon Cloud. Optionally it can also `undeploy` the preview when PR gets `merged` or `closed`.
+Build and deploy the Spin app preview to Fermyon Cloud.
 
-> For triggering Github action on PR closed, add the `closed` activity type to the keyword `types`. Refer to [GitHub documentation](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request) for more details on activity types.
-> 
-> Then you can add `undeploy: ${{ github.event.pull_request && github.event.action == 'closed' }}` as input to the action. This will ensure `undeploy` is set to true only when the Github action is triggered by a PR closed event.
+The preview lifecycle is typically to deploy a preview when a pull request is created or updated, and to remove it when the PR is closed. To do this, create a workflow whose trigger is (list of actions), and set the preview action's undeploy flag to (appropriate formula). The undeploy flag will thus resolve to false (deploy a preview, or update the existing preview) on PR creation or update, and to true (remove the preview) on PR closure. See below for an example.
+
+If you have multiple PRs in flight, the action 'knows' which preview is associated with which PR, and will update or remove only that preview.
+
+If you don't run the preview action with undeploy on the closed event, your preview will remain deployed, and will count against any Fermyon Cloud account limits.
 
 ### Inputs
 
