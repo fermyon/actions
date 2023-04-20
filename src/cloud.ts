@@ -93,9 +93,16 @@ export async function login(token: string): Promise<void> {
     await exec.exec('spin', ['cloud', 'login', '--token', token])
 }
 
-export async function deploy(manifestFile: string): Promise<Metadata> {
+export async function deploy(manifestFile: string, kvPairs: Array<string>): Promise<Metadata> {
     const manifest = spin.getAppManifest(manifestFile)
-    const result = await exec.getExecOutput("spin", ["deploy", "-f", manifestFile])
+
+    let args = ["deploy", "-f", manifestFile];
+    for (let i = 0; i < kvPairs.length; i++) {
+        args.push("--key-value")
+        args.push(kvPairs[i])
+    }
+
+    const result = await exec.getExecOutput("spin", args)
     if (result.exitCode != 0) {
         throw new Error(`deploy failed with [status_code: ${result.exitCode}] [stdout: ${result.stdout}] [stderr: ${result.stderr}] `)
     }
@@ -103,7 +110,7 @@ export async function deploy(manifestFile: string): Promise<Metadata> {
     return extractMetadataFromLogs(manifest.name, result.stdout)
 }
 
-export async function deployAs(appName: string, manifestFile: string): Promise<Metadata> {
+export async function deployAs(appName: string, manifestFile: string, kvPairs: Array<string>): Promise<Metadata> {
     const manifest = spin.getAppManifest(manifestFile)
     const previewTomlFile = path.join(path.dirname(manifestFile), `${appName}-spin.toml`)
     await io.cp(manifestFile, previewTomlFile)
@@ -113,7 +120,7 @@ export async function deployAs(appName: string, manifestFile: string): Promise<M
     var result = data.replace(re, `name = "${appName}"`);
     fs.writeFileSync(previewTomlFile, result, 'utf8');
 
-    return deploy(previewTomlFile)
+    return deploy(previewTomlFile, kvPairs)
 }
 
 export class Metadata {

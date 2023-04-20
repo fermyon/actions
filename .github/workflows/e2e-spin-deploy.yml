@@ -55,3 +55,6 @@ jobs:
         with:
           fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
           manifest_file: example-app/spin.toml
+          key_values: |-
+            abc=xyz
+            foo=bar
