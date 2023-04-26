@@ -37,7 +37,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.0",
+    "@types/node": "^18.16.1",
     "@typescript-eslint/parser": "^4.33.0",
     "@vercel/ncc": "^0.36.1",
     "eslint": "^7.32.0",
