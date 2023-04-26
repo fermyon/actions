@@ -15,6 +15,9 @@ inputs:
   undeploy:
     required: false
     description: 'if true, remove the preview deployment from Fermyon Cloud'  
+  key_values:
+    required: false
+    description: 'Pass a key/value (key=value) to all components of the application. You can specify multiple key_values by putting each key/value pair on its own line'
 runs:
   using: 'node16'
   main: '../../dist/spin/preview/index.js'

@@ -23240,7 +23240,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.undeployPreview = exports.deployPreview = exports.registryLogin = exports.getManifestFile = exports.push = exports.build = exports.deploy = exports.setup = void 0;
+exports.getKeyValuePairs = exports.undeployPreview = exports.deployPreview = exports.registryLogin = exports.getManifestFile = exports.push = exports.build = exports.deploy = exports.setup = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const spin = __importStar(__nccwpck_require__(4066));
 const github = __importStar(__nccwpck_require__(978));
@@ -23266,7 +23266,8 @@ exports.setup = setup;
 function deploy() {
     return __awaiter(this, void 0, void 0, function* () {
         const manifestFile = getManifestFile();
-        return cloud.deploy(manifestFile);
+        const kvPairs = getKeyValuePairs();
+        return cloud.deploy(manifestFile, kvPairs);
     });
 }
 exports.deploy = deploy;
@@ -23311,7 +23312,8 @@ function deployPreview(prNumber) {
         const realAppName = spinConfig.name;
         const previewAppName = `${realAppName}-pr-${prNumber}`;
         core.info(`🚀 deploying preview as ${previewAppName} to Fermyon Cloud`);
-        const metadata = yield cloud.deployAs(previewAppName, manifestFile);
+        const kvPairs = getKeyValuePairs();
+        const metadata = yield cloud.deployAs(previewAppName, manifestFile, kvPairs);
         const comment = `🚀 preview deployed successfully to Fermyon Cloud and available at ${metadata.base}`;
         core.info(comment);
         yield github.updateComment(github_1.context.repo.owner, github_1.context.repo.repo, prNumber, comment);
@@ -23339,6 +23341,14 @@ function undeployPreview(prNumber) {
     });
 }
 exports.undeployPreview = undeployPreview;
+function getKeyValuePairs() {
+    const rawKV = core.getInput('key_values');
+    if (!rawKV) {
+        return new Array();
+    }
+    return rawKV.split(/\r|\n/);
+}
+exports.getKeyValuePairs = getKeyValuePairs;
 
 
 /***/ }),
@@ -23466,10 +23476,15 @@ function login(token) {
     });
 }
 exports.login = login;
-function deploy(manifestFile) {
+function deploy(manifestFile, kvPairs) {
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = spin.getAppManifest(manifestFile);
-        const result = yield exec.getExecOutput("spin", ["deploy", "-f", manifestFile]);
+        let args = ["deploy", "-f", manifestFile];
+        for (let i = 0; i < kvPairs.length; i++) {
+            args.push("--key-value");
+            args.push(kvPairs[i]);
+        }
+        const result = yield exec.getExecOutput("spin", args);
         if (result.exitCode != 0) {
             throw new Error(`deploy failed with [status_code: ${result.exitCode}] [stdout: ${result.stdout}] [stderr: ${result.stderr}] `);
         }
@@ -23477,7 +23492,7 @@ function deploy(manifestFile) {
     });
 }
 exports.deploy = deploy;
-function deployAs(appName, manifestFile) {
+function deployAs(appName, manifestFile, kvPairs) {
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = spin.getAppManifest(manifestFile);
         const previewTomlFile = path.join(path.dirname(manifestFile), `${appName}-spin.toml`);
@@ -23486,7 +23501,7 @@ function deployAs(appName, manifestFile) {
         const re = new RegExp(`name = "${manifest.name}"`, "g");
         var result = data.replace(re, `name = "${appName}"`);
         fs.writeFileSync(previewTomlFile, result, 'utf8');
-        return deploy(previewTomlFile);
+        return deploy(previewTomlFile, kvPairs);
     });
 }
 exports.deployAs = deployAs;

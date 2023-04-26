@@ -24,7 +24,8 @@ export async function setup(): Promise<void> {
 
 export async function deploy(): Promise<cloud.Metadata> {
     const manifestFile = getManifestFile()
-    return cloud.deploy(manifestFile)
+    const kvPairs = getKeyValuePairs()
+    return cloud.deploy(manifestFile, kvPairs)
 }
 
 export async function build(): Promise<void> {
@@ -65,7 +66,8 @@ export async function deployPreview(prNumber: number): Promise<cloud.Metadata> {
     const previewAppName = `${realAppName}-pr-${prNumber}`
 
     core.info(`🚀 deploying preview as ${previewAppName} to Fermyon Cloud`)
-    const metadata = await cloud.deployAs(previewAppName, manifestFile)
+    const kvPairs = getKeyValuePairs()
+    const metadata = await cloud.deployAs(previewAppName, manifestFile, kvPairs)
 
     const comment = `🚀 preview deployed successfully to Fermyon Cloud and available at ${metadata.base}`
     core.info(comment)
@@ -95,4 +97,13 @@ export async function undeployPreview(prNumber: number): Promise<void> {
     core.info(`cleaning up preview for pr ${prNumber}`)
     await cloudClient.deleteAppById(thisPreviewExists.id)
     core.info(`preview deployment removed successfully`)
+}
+
+export function getKeyValuePairs(): Array<string> {
+    const rawKV = core.getInput('key_values');
+    if (!rawKV) {
+        return new Array<string>();
+    }
+
+    return rawKV.split(/\r|\n/)
 }

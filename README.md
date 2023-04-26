@@ -151,7 +151,7 @@ Build and deploy the Spin app to Fermyon Cloud.
 | ------------- | -------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | fermyon_token | True     | -         | [Fermyon Cloud Personal Access Token](https://developer.fermyon.com/cloud/user-settings.md#create-and-manage-a-personal-access-token) for deploying the Spin app to Fermyon Cloud |
 | manifest_file | False    | spin.toml | Path to `spin.toml`.                                                                                                                                                              |
-
+| key_values    | False    | -         | Pass a key/value (key=value) to all components of the application. You can specify multiple key_values by putting each key/value pair on its own line. Refer to example below.    |
 ### Example
 
 
@@ -179,6 +179,9 @@ jobs:
         with:
           manifest_file: example-app/spin.toml
           fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
+          key_values: |-
+            abc=xyz
+            foo=bar
 ```
 
 ## Deploy preview of Spin app to Fermyon Cloud - `fermyon/actions/spin/preview@v1`
@@ -193,12 +196,13 @@ If you don't run the preview action with undeploy on the closed event, your prev
 
 ### Inputs
 
-| Name          | Required | Default   | Description                                                                     |
-| ------------- | -------- | --------- | ------------------------------------------------------------------------------- |
-| fermyon_token | True     | -         | Fermyon Cloud Personal Access Token for deploying the Spin app to Fermyon Cloud |
-| manifest_file | False    | spin.toml | Path to `spin.toml`.                                                            |
-| github_token  | True     | -         | The GitHub token for adding a comment on PR with preview URL.                   |
-| undeploy      | False    | -         | If true, removes the preview deployment from Fermyon Cloud                      |
+| Name          | Required | Default   | Description                                                                                                                                                                    |
+| ------------- | -------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| fermyon_token | True     | -         | Fermyon Cloud Personal Access Token for deploying the Spin app to Fermyon Cloud                                                                                                |
+| manifest_file | False    | spin.toml | Path to `spin.toml`.                                                                                                                                                           |
+| github_token  | True     | -         | The GitHub token for adding a comment on PR with preview URL.                                                                                                                  |
+| undeploy      | False    | -         | If true, removes the preview deployment from Fermyon Cloud                                                                                                                     |
+| key_values    | False    | -         | Pass a key/value (key=value) to all components of the application. You can specify multiple key_values by putting each key/value pair on its own line. Refer to example below. |
 
 ### Example
 
@@ -230,4 +234,7 @@ jobs:
           fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           undeploy: ${{ github.event.pull_request && github.event.action == 'closed' }}
+          key_values: |-
+            abc=xyz
+            foo=bar
 ```
