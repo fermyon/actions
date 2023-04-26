@@ -9,6 +9,7 @@ version = "0.1.0"
 id = "example-app"
 source = "target/spin-http-js.wasm"
 exclude_files = ["**/node_modules"]
+key_value_stores = ["default"]
 [component.trigger]
 route = "/..."
 [component.build]
