@@ -196,13 +196,13 @@ If you don't run the preview action with undeploy on the closed event, your prev
 
 ### Inputs
 
-| Name          | Required | Default   | Description                                                                                                                                                                    |
-| ------------- | -------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| fermyon_token | True     | -         | Fermyon Cloud Personal Access Token for deploying the Spin app to Fermyon Cloud                                                                                                |
-| manifest_file | False    | spin.toml | Path to `spin.toml`.                                                                                                                                                           |
-| github_token  | True     | -         | The GitHub token for adding a comment on PR with preview URL.                                                                                                                  |
-| undeploy      | False    | -         | If true, removes the preview deployment from Fermyon Cloud                                                                                                                     |
-| key_values    | False    | -         | Pass a key/value (key=value) to all components of the application. You can specify multiple key_values by putting each key/value pair on its own line. Refer to example below. |
+| Name          | Required | Default   | Description                                                                     |
+| ------------- | -------- | --------- | ------------------------------------------------------------------------------- |
+| fermyon_token | True     | -         | Fermyon Cloud Personal Access Token for deploying the Spin app to Fermyon Cloud |
+| manifest_file | False    | spin.toml | Path to `spin.toml`.                                                            |
+| github_token  | True     | -         | The GitHub token for adding a comment on PR with preview URL.                   |
+| undeploy      | False    | -         | If true, removes the preview deployment from Fermyon Cloud                      |
+| key_values    | False    | -         | Pass one or more key/value pairs to the default store for all components"       |
 
 ### Example
 

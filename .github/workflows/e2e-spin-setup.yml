@@ -33,7 +33,6 @@ jobs:
   setup-default-spin:
     needs: build
     runs-on: ${{ matrix.os }}
-    if: ${{ github.repository_owner == 'fermyon' }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -57,7 +56,6 @@ jobs:
   setup-specific-spin-version:
     needs: build
     runs-on: ${{ matrix.os }}
-    if: ${{ github.repository_owner == 'fermyon' }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -89,7 +87,6 @@ jobs:
   setup-spin-and-one-plugin:
     needs: build
     runs-on: ${{ matrix.os }}
-    if: ${{ github.repository_owner == 'fermyon' }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -115,7 +112,6 @@ jobs:
   setup-spin-and-multiple-plugins:
     needs: build
     runs-on: ${{ matrix.os }}
-    if: ${{ github.repository_owner == 'fermyon' }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
