@@ -4,7 +4,10 @@ import * as cloud from './cloud'
 
 async function run(): Promise<void> {
   try {
-    await actions.build()
+    const buildEnabled = core.getBooleanInput('run_build') === false ? false : true;
+    if (buildEnabled) {
+      await actions.build()
+    }
 
     const token = core.getInput('fermyon_token', { required: true })
     await cloud.login(token)

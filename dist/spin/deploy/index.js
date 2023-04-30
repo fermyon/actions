@@ -23594,7 +23594,10 @@ const cloud = __importStar(__nccwpck_require__(7832));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield actions.build();
+            const buildEnabled = core.getBooleanInput('run_build') === false ? false : true;
+            if (buildEnabled) {
+                yield actions.build();
+            }
             const token = core.getInput('fermyon_token', { required: true });
             yield cloud.login(token);
             const metadata = yield actions.deploy();
