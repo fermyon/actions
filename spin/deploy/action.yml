@@ -12,6 +12,10 @@ inputs:
   key_values:
     required: false
     description: 'Pass a key/value (key=value) to all components of the application. You can specify multiple key_values by putting each key/value pair on its own line'
+  run_build:
+    required: false
+    description: 'run `spin build` if enabled (default)'  
+    default: true
 runs:
   using: 'node16'
   main: '../../dist/spin/deploy/index.js'

@@ -138,9 +138,6 @@ jobs:
 
 ```
 
-
-
-
 ## Deploy Spin app to Fermyon Cloud - `fermyon/actions/spin/deploy@v1`
 
 Build and deploy the Spin app to Fermyon Cloud.
@@ -152,6 +149,8 @@ Build and deploy the Spin app to Fermyon Cloud.
 | fermyon_token | True     | -         | [Fermyon Cloud Personal Access Token](https://developer.fermyon.com/cloud/user-settings.md#create-and-manage-a-personal-access-token) for deploying the Spin app to Fermyon Cloud |
 | manifest_file | False    | spin.toml | Path to `spin.toml`.                                                                                                                                                              |
 | key_values    | False    | -         | Pass a key/value (key=value) to all components of the application. You can specify multiple key_values by putting each key/value pair on its own line. Refer to example below.    |
+| run_build     | False    | True      | If enabled, run `spin build`                                                                                                                                                      |
+
 ### Example
 
 
