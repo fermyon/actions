@@ -6,7 +6,7 @@ With the `fermyon/actions` collection, you can incorporate [Spin](https://develo
 This collection of Actions enables the following use cases:
 
 - [x] set up Spin CLI and plugins using [`fermyon/actions/spin/setup@v1`](#install-spin-cli-and-plugins---fermyonactionsspinsetupv1)
-- [x] build and push your Spin app to an OCI registry using [`fermyon/actions/spin/push@v1`](#push-spin-app-to-an-oci-registry---fermyonactionsspinpushv1)
+- [x] build and push your Spin app to an OCI registry using [`fermyon/actions/spin/push@v1`](#push-spin-app-to-a-registry---fermyonactionsspinpushv1)
 - [x] deploy your Spin app to Fermyon Cloud using [`fermyon/actions/spin/deploy@v1`](#deploy-spin-app-to-fermyon-cloud---fermyonactionsspindeployv1)
 - [x] deploy PR preview to Fermyon Cloud [`fermyon/actions/spin/preview@v1`](#deploy-preview-of-spin-app-to-fermyon-cloud---fermyonactionsspinpreviewv1)
 
