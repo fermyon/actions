@@ -77,9 +77,9 @@ export class Client {
     }
 
     async deleteAppById(id: string): Promise<void> {
-        const resp = await this._httpclient.get(`${this.base}/api/apps`)
-        if (resp.message.statusCode !== httpm.HttpCodes.OK) {
-            throw `expected code ${httpm.HttpCodes.OK}, got ${resp.message.statusCode}`
+        const resp = await this._httpclient.del(`${this.base}/api/apps/${id}`)
+        if (resp.message.statusCode !== 204) {
+            throw `expected code 204, got ${resp.message.statusCode}`
         }
     }
 
