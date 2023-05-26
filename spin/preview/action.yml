@@ -18,6 +18,9 @@ inputs:
   key_values:
     required: false
     description: 'Pass a key/value (key=value) to all components of the application. You can specify multiple key_values by putting each key/value pair on its own line'
+outputs:
+  app_url:
+    description: 'the URL of the deployed preview app'
 runs:
   using: 'node16'
   main: '../../dist/spin/preview/index.js'
