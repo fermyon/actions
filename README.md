@@ -151,6 +151,12 @@ Build and deploy the Spin app to Fermyon Cloud.
 | key_values    | False    | -         | Pass a key/value (key=value) to all components of the application. You can specify multiple key_values by putting each key/value pair on its own line. Refer to example below.    |
 | run_build     | False    | True      | If enabled, run `spin build`                                                                                                                                                      |
 
+### Outputs
+
+| Name    | Description                      |
+| ------- | -------------------------------- |
+| app_url | The URL of the deployed Spin app |
+
 ### Example
 
 
@@ -202,6 +208,12 @@ If you don't run the preview action with undeploy on the closed event, your prev
 | github_token  | True     | -         | The GitHub token for adding a comment on PR with preview URL.                   |
 | undeploy      | False    | -         | If true, removes the preview deployment from Fermyon Cloud                      |
 | key_values    | False    | -         | Pass one or more key/value pairs to the default store for all components"       |
+
+### Outputs
+
+| Name    | Description                              |
+| ------- | ---------------------------------------- |
+| app_url | The URL of the deployed Spin app preview |
 
 ### Example
 

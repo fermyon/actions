@@ -16,6 +16,9 @@ inputs:
     required: false
     description: 'run `spin build` if enabled (default)'  
     default: true
+outputs:
+  app_url:
+    description: 'the URL of the deployed app'
 runs:
   using: 'node16'
   main: '../../dist/spin/deploy/index.js'
