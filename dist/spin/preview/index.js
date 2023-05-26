@@ -24082,7 +24082,15 @@ function registryLogin(registry, username, password) {
 exports.registryLogin = registryLogin;
 function registryPush(registry_reference, manifestFile) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield exec.exec('spin', ['registry', 'push', '-f', manifestFile, registry_reference]);
+        const result = yield exec.getExecOutput('spin', ['registry', 'push', '-f', manifestFile, registry_reference]);
+        if (result.exitCode != 0) {
+            throw new Error(`failed while pushing reference ${registry_reference}.\n[stdout: ${result.stdout}] [stderr: ${result.stderr}]`);
+        }
+        const digest = result.stdout.match(new RegExp('sha256:[A-Fa-f0-9]{64}'));
+        if (digest == null) {
+            core.notice(`successfully pushed reference ${registry_reference} but unable to determine digest`);
+        }
+        core.setOutput('digest', digest);
     });
 }
 exports.registryPush = registryPush;

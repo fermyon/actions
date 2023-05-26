@@ -72,7 +72,15 @@ export async function registryLogin(registry: string, username: string, password
 }
 
 export async function registryPush(registry_reference: string, manifestFile: string): Promise<void> {
-    await exec.exec('spin', ['registry', 'push', '-f', manifestFile, registry_reference])
+    const result = await exec.getExecOutput('spin', ['registry', 'push', '-f', manifestFile, registry_reference])
+    if (result.exitCode != 0) {
+        throw new Error(`failed while pushing reference ${registry_reference}.\n[stdout: ${result.stdout}] [stderr: ${result.stderr}]`)
+    }
+    const digest = result.stdout.match(new RegExp('sha256:[A-Fa-f0-9]{64}'))
+    if (digest == null) {
+        core.notice(`successfully pushed reference ${registry_reference} but unable to determine digest`)
+    }
+    core.setOutput('digest', digest)
 }
 
 export class SpinAppManifest {
