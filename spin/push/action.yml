@@ -18,6 +18,9 @@ inputs:
   registry_password:
     required: false
     description: 'OCI Registry password or personal access token'
+outputs:
+  digest:
+    description: 'The image digest of the pushed app e.g. sha256:...'
 runs:
   using: 'node16'
   main: '../../dist/spin/push/index.js'

@@ -106,6 +106,12 @@ Build and push the Spin app to your desired OCI Registry (note that this registr
 | registry_username  | False    | -         | if provided, used to login to OCI Registry                                               |
 | registry_password  | False    | -         | if provided, used to login to OCI Registry                                               |
 
+### Outputs
+
+| Name   | Description                                         |
+| ------ | --------------------------------------------------- |
+| digest | The image digest of the pushed app e.g. sha256:...  |
+
 ### Example
 
 ```yaml
@@ -128,6 +134,7 @@ jobs:
           plugins: js2wasm
 
       - name: build and push
+        id: push
         uses: fermyon/actions/spin/push@v1
         with:
           registry: ghcr.io
@@ -135,6 +142,9 @@ jobs:
           registry_password: ${{ secrets.GITHUB_TOKEN }}
           registry_reference: "ghcr.io/${{ env.REPOSITORY }}/${{ env.SAMPLE_APP_IMAGE_NAME }}:${{ github.run_id }}-2"
           manifest_file: example-app/spin.toml
+
+      - name: echo digest
+        run: echo ${{ steps.push.outputs.digest }}
 
 ```
 
