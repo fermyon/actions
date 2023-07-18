@@ -160,6 +160,8 @@ Build and deploy the Spin app to Fermyon Cloud.
 | manifest_file | False    | spin.toml | Path to `spin.toml`.                                                                                                                                                              |
 | key_values    | False    | -         | Pass a key/value (key=value) to all components of the application. You can specify multiple key_values by putting each key/value pair on its own line. Refer to example below.    |
 | run_build     | False    | True      | If enabled, run `spin build`                                                                                                                                                      |
+| variables     | False    | -         | Pass a variable (variable=value) to all components of the application. You can specify multiple variables by putting each variable/value pair on its own line. Refer to example below. |
+
 
 ### Outputs
 
@@ -197,6 +199,9 @@ jobs:
           key_values: |-
             abc=xyz
             foo=bar
+          variables: |-
+            password=${{ secrets.SECURE_PASSWORD }}
+            apikey=${{ secrets.API_KEY }}
 ```
 
 ## Deploy preview of Spin app to Fermyon Cloud - `fermyon/actions/spin/preview@v1`
@@ -218,6 +223,7 @@ If you don't run the preview action with undeploy on the closed event, your prev
 | github_token  | True     | -         | The GitHub token for adding a comment on PR with preview URL.                   |
 | undeploy      | False    | -         | If true, removes the preview deployment from Fermyon Cloud                      |
 | key_values    | False    | -         | Pass one or more key/value pairs to the default store for all components"       |
+| variables     | False    | -         | Pass a variable (variable=value) to all components of the application. You can specify multiple variables by putting each variable/value pair on its own line. Refer to example below. |
 
 ### Outputs
 
@@ -258,4 +264,7 @@ jobs:
           key_values: |-
             abc=xyz
             foo=bar
+          variables: |-
+            password=${{ secrets.SECURE_PASSWORD }}
+            apikey=${{ secrets.API_KEY }}
 ```
