@@ -102,7 +102,7 @@ jobs:
       - name: setup spin
         uses: ./spin/setup/
         with:
-          version: v0.10.0
+          version: v1.4.1
           plugins: js2wasm
           github_token: ${{ github.token }}
 
@@ -127,7 +127,7 @@ jobs:
       - name: setup spin
         uses: ./spin/setup/
         with:
-          version: v0.10.0
+          version: v1.4.1
           plugins: js2wasm,py2wasm
           github_token: ${{ github.token }}
 

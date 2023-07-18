@@ -16,6 +16,9 @@ inputs:
     required: false
     description: 'run `spin build` if enabled (default)'  
     default: true
+  variables:
+    required: false
+    description: 'Pass a variable (variable=value) to all components of the application. You can specify multiple variables by putting each variable/value pair on its own line'
 outputs:
   app_url:
     description: 'the URL of the deployed app'

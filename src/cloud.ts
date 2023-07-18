@@ -93,13 +93,18 @@ export async function login(token: string): Promise<void> {
     await exec.exec('spin', ['cloud', 'login', '--token', token])
 }
 
-export async function deploy(manifestFile: string, kvPairs: Array<string>): Promise<Metadata> {
+export async function deploy(manifestFile: string, kvPairs: Array<string>, variables: Array<string>): Promise<Metadata> {
     const manifest = spin.getAppManifest(manifestFile)
 
     let args = ["deploy", "-f", manifestFile];
     for (let i = 0; i < kvPairs.length; i++) {
         args.push("--key-value")
         args.push(kvPairs[i])
+    }
+
+    for (let i = 0; i < variables.length; i++) {
+        args.push("--variable")
+        args.push(variables[i])
     }
 
     const result = await exec.getExecOutput("spin", args)
@@ -110,7 +115,7 @@ export async function deploy(manifestFile: string, kvPairs: Array<string>): Prom
     return extractMetadataFromLogs(manifest.name, result.stdout)
 }
 
-export async function deployAs(appName: string, manifestFile: string, kvPairs: Array<string>): Promise<Metadata> {
+export async function deployAs(appName: string, manifestFile: string, kvPairs: Array<string>, variables: Array<string>): Promise<Metadata> {
     const manifest = spin.getAppManifest(manifestFile)
     const previewTomlFile = path.join(path.dirname(manifestFile), `${appName}-spin.toml`)
     await io.cp(manifestFile, previewTomlFile)
@@ -120,7 +125,7 @@ export async function deployAs(appName: string, manifestFile: string, kvPairs: A
     var result = data.replace(re, `name = "${appName}"`);
     fs.writeFileSync(previewTomlFile, result, 'utf8');
 
-    return deploy(previewTomlFile, kvPairs)
+    return deploy(previewTomlFile, kvPairs, variables)
 }
 
 export class Metadata {

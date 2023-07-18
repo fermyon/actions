@@ -25,7 +25,8 @@ export async function setup(): Promise<void> {
 export async function deploy(): Promise<cloud.Metadata> {
     const manifestFile = getManifestFile()
     const kvPairs = getKeyValuePairs()
-    return cloud.deploy(manifestFile, kvPairs)
+    const variables = getDeployVariables()
+    return cloud.deploy(manifestFile, kvPairs, variables)
 }
 
 export async function build(): Promise<void> {
@@ -67,7 +68,8 @@ export async function deployPreview(prNumber: number): Promise<cloud.Metadata> {
 
     core.info(`🚀 deploying preview as ${previewAppName} to Fermyon Cloud`)
     const kvPairs = getKeyValuePairs()
-    const metadata = await cloud.deployAs(previewAppName, manifestFile, kvPairs)
+    const variables = getDeployVariables()
+    const metadata = await cloud.deployAs(previewAppName, manifestFile, kvPairs, variables)
 
     const comment = `🚀 preview deployed successfully to Fermyon Cloud and available at ${metadata.base}`
     core.info(comment)
@@ -106,4 +108,13 @@ export function getKeyValuePairs(): Array<string> {
     }
 
     return rawKV.split(/\r|\n/)
+}
+
+export function getDeployVariables(): Array<string> {
+    const rawVariables = core.getInput('variables');
+    if (!rawVariables) {
+        return new Array<string>();
+    }
+
+    return rawVariables.split(/\r|\n/)
 }
