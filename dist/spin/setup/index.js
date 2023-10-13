@@ -24034,7 +24034,10 @@ function download(version) {
         const osArch = sys.getArch();
         const archiveExtension = osPlatform === 'windows' ? '.zip' : '.tar.gz';
         const binaryExtension = osPlatform === 'windows' ? '.exe' : '';
-        const downloadUrl = `https://github.com/fermyon/spin/releases/download/${version}/spin-${version}-${osPlatform}-${osArch}${archiveExtension}`;
+        const downloadBaseURL = process.env.SPIN_DOWNLOAD_BASE_URL
+            ? process.env.SPIN_DOWNLOAD_BASE_URL
+            : `https://github.com/fermyon/spin/releases/download/${version}`;
+        const downloadUrl = `${downloadBaseURL}/spin-${version}-${osPlatform}-${osArch}${archiveExtension}`;
         yield downloader
             .getConfig(`spin${binaryExtension}`, downloadUrl, `spin${binaryExtension}`)
             .download();
