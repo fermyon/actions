@@ -9,7 +9,7 @@ import * as io from '@actions/io'
 import * as os from 'os'
 import * as path from 'path'
 import * as tc from '@actions/tool-cache'
-import { v4 as uuidv4 } from 'uuid'
+import {v4 as uuidv4} from 'uuid'
 
 export enum ArchiveType {
   None = '',
@@ -86,7 +86,6 @@ export class Downloader {
     // Clean up the tempdir when done (this step is important for self-hosted runners)
     return io.rmRF(tempDir)
   }
-
 
   async downloadAsDir(): Promise<void> {
     this.validate()
@@ -165,7 +164,7 @@ export class Downloader {
     }
 
     core.addPath(dest)
-    core.addPath(path.join(dest, "bin"))
+    core.addPath(path.join(dest, 'bin'))
   }
 
   validate(): void {

@@ -1,7 +1,7 @@
-import * as core from '@actions/core'
-import * as github from '@actions/github';
 import * as actions from './actions'
 import * as cloud from './cloud'
+import * as core from '@actions/core'
+import * as github from '@actions/github'
 
 async function run(): Promise<void> {
   try {
@@ -15,11 +15,11 @@ async function run(): Promise<void> {
       return
     }
 
-    const token = core.getInput('fermyon_token', { required: true })
+    const token = core.getInput('fermyon_token', {required: true})
     await cloud.login(token)
     await actions.build()
     const metadata = await actions.deployPreview(prNumber)
-    core.setOutput("app-url", metadata.base)
+    core.setOutput('app-url', metadata.base)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }

@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 7351:
+/***/ 5241:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -135,7 +135,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
-const command_1 = __nccwpck_require__(7351);
+const command_1 = __nccwpck_require__(5241);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(5278);
 const os = __importStar(__nccwpck_require__(2037));
@@ -1789,7 +1789,7 @@ const os = __importStar(__nccwpck_require__(2037));
 const events = __importStar(__nccwpck_require__(2361));
 const child = __importStar(__nccwpck_require__(2081));
 const path = __importStar(__nccwpck_require__(1017));
-const io = __importStar(__nccwpck_require__(7436));
+const io = __importStar(__nccwpck_require__(7351));
 const ioUtil = __importStar(__nccwpck_require__(1962));
 const timers_1 = __nccwpck_require__(9512);
 /* eslint-disable @typescript-eslint/unbound-method */
@@ -3549,7 +3549,7 @@ exports.getCmdPath = getCmdPath;
 
 /***/ }),
 
-/***/ 7436:
+/***/ 7351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -4119,7 +4119,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.evaluateVersions = exports.isExplicitVersion = exports.findFromManifest = exports.getManifestFromRepo = exports.findAllVersions = exports.find = exports.cacheFile = exports.cacheDir = exports.extractZip = exports.extractXar = exports.extractTar = exports.extract7z = exports.downloadTool = exports.HTTPError = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const io = __importStar(__nccwpck_require__(7436));
+const io = __importStar(__nccwpck_require__(7351));
 const fs = __importStar(__nccwpck_require__(7147));
 const mm = __importStar(__nccwpck_require__(2473));
 const os = __importStar(__nccwpck_require__(2037));
@@ -23241,13 +23241,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getDeployVariables = exports.getKeyValuePairs = exports.undeployPreview = exports.deployPreview = exports.registryLogin = exports.getManifestFile = exports.push = exports.build = exports.deploy = exports.setup = void 0;
-const core = __importStar(__nccwpck_require__(2186));
-const spin = __importStar(__nccwpck_require__(4066));
-const github = __importStar(__nccwpck_require__(978));
 const cloud = __importStar(__nccwpck_require__(7832));
+const core = __importStar(__nccwpck_require__(2186));
+const github = __importStar(__nccwpck_require__(978));
+const spin = __importStar(__nccwpck_require__(4066));
 const github_1 = __nccwpck_require__(5438);
-const FERMYON_GITHUB_ORG = "fermyon";
-const SPIN_GITHUB_REPO = "spin";
+const FERMYON_GITHUB_ORG = 'fermyon';
+const SPIN_GITHUB_REPO = 'spin';
 function setup() {
     return __awaiter(this, void 0, void 0, function* () {
         let version = core.getInput('version');
@@ -23281,7 +23281,9 @@ function build() {
 exports.build = build;
 function push() {
     return __awaiter(this, void 0, void 0, function* () {
-        const registry_reference = core.getInput('registry_reference', { required: true });
+        const registry_reference = core.getInput('registry_reference', {
+            required: true
+        });
         const manifestFile = getManifestFile();
         yield spin.registryPush(registry_reference, manifestFile);
     });
@@ -23293,10 +23295,10 @@ function getManifestFile() {
 exports.getManifestFile = getManifestFile;
 function registryLogin() {
     return __awaiter(this, void 0, void 0, function* () {
-        const required = ["registry", "registry_username", "registry_password"];
+        const required = ['registry', 'registry_username', 'registry_password'];
         const provided = required.filter(x => core.getInput(x) !== null && core.getInput(x) !== '').length;
         if (provided === 0) {
-            core.debug("registry login not requested");
+            core.debug('registry login not requested');
             return Promise.resolve();
         }
         if (provided > 0 && provided !== required.length) {
@@ -23327,9 +23329,10 @@ function undeployPreview(prNumber) {
     return __awaiter(this, void 0, void 0, function* () {
         const manifestFile = getManifestFile();
         const spinConfig = spin.getAppManifest(manifestFile);
-        const realAppName = spinConfig.name;
         const previewAppName = `${spinConfig.name}-pr-${prNumber}`;
-        const cloudToken = core.getInput('fermyon_token', { required: true });
+        const cloudToken = core.getInput('fermyon_token', {
+            required: true
+        });
         const cloudClient = cloud.initClient(cloudToken);
         const apps = yield cloudClient.getAllApps();
         const thisPreviewExists = apps.find(item => item.name === previewAppName);
@@ -23402,13 +23405,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.extractMetadataFromLogs = exports.Metadata = exports.deployAs = exports.deploy = exports.login = exports.Client = exports.Route = exports.App = exports.GetAppsResp = exports.initClient = exports.DEFAULT_CLOUD_URL = void 0;
-const httpm = __importStar(__nccwpck_require__(6255));
 const exec = __importStar(__nccwpck_require__(1514));
-const io = __importStar(__nccwpck_require__(7436));
 const fs = __importStar(__nccwpck_require__(5630));
-const spin = __importStar(__nccwpck_require__(4066));
+const httpm = __importStar(__nccwpck_require__(6255));
+const io = __importStar(__nccwpck_require__(7351));
 const path = __importStar(__nccwpck_require__(1017));
-exports.DEFAULT_CLOUD_URL = "https://cloud.fermyon.com";
+const spin = __importStar(__nccwpck_require__(4066));
+exports.DEFAULT_CLOUD_URL = 'https://cloud.fermyon.com';
 function initClient(token) {
     return new Client(token);
 }
@@ -23438,7 +23441,7 @@ class Client {
     constructor(token) {
         this.base = exports.DEFAULT_CLOUD_URL;
         this.token = token;
-        this._httpclient = new httpm.HttpClient("fermyon/actions", [], {
+        this._httpclient = new httpm.HttpClient('fermyon/actions', [], {
             headers: {
                 Authorization: `Bearer ${this.token}`
             }
@@ -23448,7 +23451,7 @@ class Client {
         return __awaiter(this, void 0, void 0, function* () {
             const resp = yield this._httpclient.get(`${this.base}/api/apps`);
             if (resp.message.statusCode !== httpm.HttpCodes.OK) {
-                throw `expexted code ${httpm.HttpCodes.OK}, got ${resp.message.statusCode}`;
+                throw new Error(`expexted code ${httpm.HttpCodes.OK}, got ${resp.message.statusCode}`);
             }
             const appsResp = JSON.parse(yield resp.readBody());
             return appsResp.items;
@@ -23456,10 +23459,10 @@ class Client {
     }
     getAppIdByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
-            let apps = yield this.getAllApps();
+            const apps = yield this.getAllApps();
             const app = apps.find(item => item.name === name);
             if (!app) {
-                throw `no app found with name ${name}`;
+                throw new Error(`no app found with name ${name}`);
             }
             return app.id;
         });
@@ -23468,13 +23471,13 @@ class Client {
         return __awaiter(this, void 0, void 0, function* () {
             const resp = yield this._httpclient.del(`${this.base}/api/apps/${id}`);
             if (resp.message.statusCode !== 204) {
-                throw `expected code 204, got ${resp.message.statusCode}`;
+                throw new Error(`expected code 204, got ${resp.message.statusCode}`);
             }
         });
     }
     deleteAppByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
-            let appId = yield this.getAppIdByName(name);
+            const appId = yield this.getAppIdByName(name);
             this.deleteAppById(appId);
         });
     }
@@ -23489,20 +23492,20 @@ exports.login = login;
 function deploy(manifestFile, kvPairs, variables) {
     return __awaiter(this, void 0, void 0, function* () {
         const manifest = spin.getAppManifest(manifestFile);
-        let args = ["deploy", "-f", manifestFile];
-        for (let i = 0; i < kvPairs.length; i++) {
-            args.push("--key-value");
-            args.push(kvPairs[i]);
+        const args = ['deploy', '-f', manifestFile];
+        for (const kvpair of kvPairs) {
+            args.push('--key-value');
+            args.push(kvpair);
         }
-        for (let i = 0; i < variables.length; i++) {
-            args.push("--variable");
-            args.push(variables[i]);
+        for (const variable of variables) {
+            args.push('--variable');
+            args.push(variable);
         }
-        const result = yield exec.getExecOutput("spin", args);
-        if (result.exitCode != 0) {
+        const result = yield exec.getExecOutput('spin', args);
+        if (result.exitCode !== 0) {
             throw new Error(`deploy failed with [status_code: ${result.exitCode}] [stdout: ${result.stdout}] [stderr: ${result.stderr}] `);
         }
-        return (0, exports.extractMetadataFromLogs)(manifest.name, result.stdout);
+        return extractMetadataFromLogs(manifest.name, result.stdout);
     });
 }
 exports.deploy = deploy;
@@ -23512,8 +23515,8 @@ function deployAs(appName, manifestFile, kvPairs, variables) {
         const previewTomlFile = path.join(path.dirname(manifestFile), `${appName}-spin.toml`);
         yield io.cp(manifestFile, previewTomlFile);
         const data = fs.readFileSync(previewTomlFile, 'utf8');
-        const re = new RegExp(`name = "${manifest.name}"`, "g");
-        var result = data.replace(re, `name = "${appName}"`);
+        const re = new RegExp(`name = "${manifest.name}"`, 'g');
+        const result = data.replace(re, `name = "${appName}"`);
         fs.writeFileSync(previewTomlFile, result, 'utf8');
         return deploy(previewTomlFile, kvPairs, variables);
     });
@@ -23529,26 +23532,26 @@ class Metadata {
     }
 }
 exports.Metadata = Metadata;
-const extractMetadataFromLogs = function (appName, logs) {
+function extractMetadataFromLogs(appName, logs) {
     let version = '';
-    const m = logs.match(`Uploading ${appName} version (.*)\.\.\.`);
+    const m = logs.match(`Uploading ${appName} version (.*)\\.\\.\\.`);
     if (m && m.length > 1) {
         version = m[1];
     }
     let routeStart = false;
-    const routeMatcher = `^(.*): (https?:\/\/[^\\s^(]+)(.*)`;
-    const lines = logs.split("\n");
-    let routes = new Array();
+    const routeMatcher = `^(.*): (https?:\\/\\/[^\\s^(]+)(.*)`;
+    const lines = logs.split('\n');
+    const routes = new Array();
     let base = '';
-    for (let i = 0; i < lines.length; i++) {
-        if (!routeStart && lines[i].trim() != 'Available Routes:') {
+    for (const line of lines) {
+        if (!routeStart && line.trim() !== 'Available Routes:') {
             continue;
         }
         if (!routeStart) {
             routeStart = true;
             continue;
         }
-        const matches = lines[i].trim().match(routeMatcher);
+        const matches = line.trim().match(routeMatcher);
         if (matches && matches.length >= 2) {
             const route = new Route(matches[1], matches[2], matches[3].trim() === '(wildcard)');
             routes.push(route);
@@ -23558,7 +23561,7 @@ const extractMetadataFromLogs = function (appName, logs) {
         base = routes[0].routeUrl;
     }
     return new Metadata(appName, base, version, routes, logs);
-};
+}
 exports.extractMetadataFromLogs = extractMetadataFromLogs;
 
 
@@ -23609,7 +23612,7 @@ exports.binPath = exports.binFolderPath = exports.getArchiveType = exports.Downl
 const core = __importStar(__nccwpck_require__(2186));
 const exec = __importStar(__nccwpck_require__(1514));
 const fs = __importStar(__nccwpck_require__(5630));
-const io = __importStar(__nccwpck_require__(7436));
+const io = __importStar(__nccwpck_require__(7351));
 const os = __importStar(__nccwpck_require__(2037));
 const path = __importStar(__nccwpck_require__(1017));
 const tc = __importStar(__nccwpck_require__(7784));
@@ -23741,7 +23744,7 @@ class Downloader {
                 fs.moveSync(downloadPath, dest);
             }
             core.addPath(dest);
-            core.addPath(path.join(dest, "bin"));
+            core.addPath(path.join(dest, 'bin'));
         });
     }
     validate() {
@@ -23848,8 +23851,8 @@ const octokit = (() => {
 function getLatestRelease(owner, repo) {
     return __awaiter(this, void 0, void 0, function* () {
         const allReleases = yield octokit.rest.repos.listReleases({
-            owner: owner,
-            repo: repo,
+            owner,
+            repo
         });
         const releases = allReleases.data.filter(item => !item.prerelease);
         if (releases.length === 0) {
@@ -23862,7 +23865,12 @@ exports.getLatestRelease = getLatestRelease;
 function updateComment(owner, repo, prNumber, msg) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!(yield findComment(owner, repo, prNumber, msg))) {
-            yield octokit.rest.issues.createComment({ owner: owner, repo: repo, issue_number: prNumber, body: msg });
+            yield octokit.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: prNumber,
+                body: msg
+            });
             core.info(`updated comment on PR #${prNumber}`);
         }
     });
@@ -23872,7 +23880,7 @@ function findComment(owner, repo, prNumber, msg) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            for (var _d = true, _e = __asyncValues(octokit.paginate.iterator(octokit.rest.issues.listComments, { owner: owner, repo: repo, issue_number: prNumber, per_page: 100 })), _f; _f = yield _e.next(), _a = _f.done, !_a;) {
+            for (var _d = true, _e = __asyncValues(octokit.paginate.iterator(octokit.rest.issues.listComments, { owner, repo, issue_number: prNumber, per_page: 100 })), _f; _f = yield _e.next(), _a = _f.done, !_a;) {
                 _c = _f.value;
                 _d = false;
                 try {
@@ -23943,8 +23951,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(2186));
 const actions = __importStar(__nccwpck_require__(7014));
+const core = __importStar(__nccwpck_require__(2186));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -24003,22 +24011,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getAppManifest = exports.SpinAppManifest = exports.registryPush = exports.registryLogin = exports.build = exports.build_cmd = exports.installPlugins = exports.install = exports.CANARY_VERSION = exports.DEFAULT_APP_CONFIG_FILE = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const exec = __importStar(__nccwpck_require__(1514));
 const downloader = __importStar(__nccwpck_require__(9099));
-const sys = __importStar(__nccwpck_require__(4300));
+const exec = __importStar(__nccwpck_require__(1514));
 const fs = __importStar(__nccwpck_require__(5630));
+const sys = __importStar(__nccwpck_require__(4300));
 const toml = __importStar(__nccwpck_require__(4920));
-exports.DEFAULT_APP_CONFIG_FILE = "spin.toml";
-exports.CANARY_VERSION = "canary";
+exports.DEFAULT_APP_CONFIG_FILE = 'spin.toml';
+exports.CANARY_VERSION = 'canary';
 function install(version) {
     return __awaiter(this, void 0, void 0, function* () {
         yield download(version);
-        const result = yield exec.getExecOutput("spin", ["--version"]);
-        if (result.exitCode != 0) {
+        const result = yield exec.getExecOutput('spin', ['--version']);
+        if (result.exitCode !== 0) {
             throw new Error(`failed while verifying spin version.\n[stdout: ${result.stdout}] [stderr: ${result.stderr}]`);
         }
         core.info(result.stdout);
-        core.exportVariable("SPIN_VERSION", result.stdout);
+        core.exportVariable('SPIN_VERSION', result.stdout);
     });
 }
 exports.install = install;
@@ -24026,8 +24034,8 @@ function download(version) {
     return __awaiter(this, void 0, void 0, function* () {
         const osPlatform = sys.getPlatform();
         const osArch = sys.getArch();
-        let archiveExtension = osPlatform === 'windows' ? '.zip' : '.tar.gz';
-        let binaryExtension = osPlatform === 'windows' ? '.exe' : '';
+        const archiveExtension = osPlatform === 'windows' ? '.zip' : '.tar.gz';
+        const binaryExtension = osPlatform === 'windows' ? '.exe' : '';
         const downloadUrl = `https://github.com/fermyon/spin/releases/download/${version}/spin-${version}-${osPlatform}-${osArch}${archiveExtension}`;
         yield downloader
             .getConfig(`spin${binaryExtension}`, downloadUrl, `spin${binaryExtension}`)
@@ -24068,15 +24076,15 @@ function installOnePlugin(plugin) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info(`installing spin plugin '${plugin}'`);
         yield exec.exec('spin', ['plugin', 'install', plugin, '--yes']);
-        const result = yield exec.getExecOutput("spin", [plugin, "--version"]);
-        if (result.exitCode != 0) {
+        const result = yield exec.getExecOutput('spin', [plugin, '--version']);
+        if (result.exitCode !== 0) {
             throw new Error(`failed while verifying installation for spin plugin ${plugin}.\n[stdout: ${result.stdout}] [stderr: ${result.stderr}]`);
         }
     });
 }
 function registryLogin(registry, username, password) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield exec.exec('spin', ['registry', 'login', registry, '--username', username, "--password-stdin"], {
+        yield exec.exec('spin', ['registry', 'login', registry, '--username', username, '--password-stdin'], {
             input: Buffer.from(password)
         });
     });
@@ -24084,13 +24092,20 @@ function registryLogin(registry, username, password) {
 exports.registryLogin = registryLogin;
 function registryPush(registry_reference, manifestFile) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield exec.getExecOutput('spin', ['registry', 'push', '-f', manifestFile, registry_reference]);
-        if (result.exitCode != 0) {
+        const result = yield exec.getExecOutput('spin', [
+            'registry',
+            'push',
+            '-f',
+            manifestFile,
+            registry_reference
+        ]);
+        if (result.exitCode !== 0) {
             throw new Error(`failed while pushing reference ${registry_reference}.\n[stdout: ${result.stdout}] [stderr: ${result.stderr}]`);
         }
         const matches = result.stdout.match(new RegExp('sha256:[A-Fa-f0-9]{64}'));
-        matches != null ? core.setOutput('digest', matches[0]) :
-            core.notice(`successfully pushed reference ${registry_reference} but unable to determine digest`);
+        matches !== null
+            ? core.setOutput('digest', matches[0])
+            : core.notice(`successfully pushed reference ${registry_reference} but unable to determine digest`);
     });
 }
 exports.registryPush = registryPush;
@@ -24101,8 +24116,7 @@ class SpinAppManifest {
 }
 exports.SpinAppManifest = SpinAppManifest;
 function getAppManifest(manifestFile) {
-    let token = '';
-    const data = fs.readFileSync(manifestFile, "utf8");
+    const data = fs.readFileSync(manifestFile, 'utf8');
     return toml.parse(data);
 }
 exports.getAppManifest = getAppManifest;
