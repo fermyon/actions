@@ -58,7 +58,7 @@ jobs:
       - name: setup spin
         uses: ./spin/setup/
         with:
-          version: v0.10.1
+          version: v1.5.1
           plugins: js2wasm
           github_token: ${{ github.token }}
 
