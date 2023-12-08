@@ -109,6 +109,18 @@ export async function registryPush(
       )
 }
 
+interface SpinAppManifestV1 {
+  spin_manifest_version: string
+  name: string
+}
+
+interface SpinAppManifestV2 {
+  spin_manifest_version: number
+  application: {
+    name: string
+  }
+}
+
 export class SpinAppManifest {
   name: string
 
@@ -119,5 +131,15 @@ export class SpinAppManifest {
 
 export function getAppManifest(manifestFile: string): SpinAppManifest {
   const data = fs.readFileSync(manifestFile, 'utf8')
-  return toml.parse(data)
+  const manifest = toml.parse(data)
+
+  if (manifest.spin_manifest_version === '1') {
+    return new SpinAppManifest((manifest as SpinAppManifestV1).name)
+  } else if (manifest.spin_manifest_version === 2) {
+    return new SpinAppManifest((manifest as SpinAppManifestV2).application.name)
+  }
+
+  throw new Error(
+    `unsupported Spin manifest version ${manifest.spin_manifest_version}`
+  )
 }

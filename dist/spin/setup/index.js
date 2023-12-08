@@ -24118,7 +24118,14 @@ class SpinAppManifest {
 exports.SpinAppManifest = SpinAppManifest;
 function getAppManifest(manifestFile) {
     const data = fs.readFileSync(manifestFile, 'utf8');
-    return toml.parse(data);
+    const manifest = toml.parse(data);
+    if (manifest.spin_manifest_version === '1') {
+        return new SpinAppManifest(manifest.name);
+    }
+    else if (manifest.spin_manifest_version === 2) {
+        return new SpinAppManifest(manifest.application.name);
+    }
+    throw new Error(`unsupported Spin manifest version ${manifest.spin_manifest_version}`);
 }
 exports.getAppManifest = getAppManifest;
 
