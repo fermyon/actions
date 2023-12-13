@@ -167,7 +167,7 @@ Build and deploy the Spin app to Fermyon Cloud.
 
 | Name    | Description                      |
 | ------- | -------------------------------- |
-| app_url | The URL of the deployed Spin app |
+| app-url | The URL of the deployed Spin app |
 
 ### Example
 
@@ -229,7 +229,7 @@ If you don't run the preview action with undeploy on the closed event, your prev
 
 | Name    | Description                              |
 | ------- | ---------------------------------------- |
-| app_url | The URL of the deployed Spin app preview |
+| app-url | The URL of the deployed Spin app preview |
 
 ### Example
 
