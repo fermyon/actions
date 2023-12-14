@@ -214,6 +214,9 @@ If you have multiple PRs in flight, the action 'knows' which preview is associat
 
 If you don't run the preview action with undeploy on the closed event, your preview will remain deployed, and will count against any Fermyon Cloud account limits.
 
+> [!NOTE]
+> This action requires `pull-requests: write` permissions on the GitHub token to allow adding a comment (with the preview URL) on the pull request. Refer to the GitHub [documentation](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token) to check if your workflow configuration provides that permission.
+
 ### Inputs
 
 | Name          | Required | Default   | Description                                                                     |
