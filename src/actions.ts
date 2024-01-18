@@ -106,10 +106,7 @@ export async function undeployPreview(prNumber: number): Promise<void> {
 
   const previewAppName = `${spinConfig.name}-pr-${prNumber}`
 
-  const cloudToken = core.getInput('fermyon_token', {
-    required: true
-  })
-  const cloudClient = cloud.initClient(cloudToken)
+  const cloudClient = getCloudClient()
 
   const apps = await cloudClient.getAllApps()
   const thisPreviewExists = apps.find(item => item.name === previewAppName)
@@ -143,11 +140,7 @@ export function getDeployVariables(): string[] {
 }
 
 export async function getDomainForApp(appName: string): Promise<string> {
-  const cloudToken = core.getInput('fermyon_token', {
-    required: true
-  })
-  const cloudClient = cloud.initClient(cloudToken)
-
+  const cloudClient = getCloudClient()
   const app = await cloudClient.getAppByName(appName)
 
   if (app.domain && app.domain.name) {
@@ -155,4 +148,12 @@ export async function getDomainForApp(appName: string): Promise<string> {
   }
 
   return `https://${app.subdomain}`
+}
+
+export function getCloudClient(): cloud.Client {
+  const cloudToken = core.getInput('fermyon_token', {
+    required: true
+  })
+
+  return cloud.initClient(cloudToken)
 }
