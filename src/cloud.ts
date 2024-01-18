@@ -19,6 +19,14 @@ export interface GetAppsResp {
 export interface App {
   id: string
   name: string
+  healthStatus: string
+  subdomain: string
+  domain: Domain
+}
+
+export interface Domain {
+  name: string
+  validationStatus: string
 }
 
 export interface Route {
