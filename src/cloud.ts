@@ -12,33 +12,19 @@ export function initClient(token: string): Client {
   return new Client(token)
 }
 
-export class GetAppsResp {
+export interface GetAppsResp {
   items: App[]
-  constructor(items: App[]) {
-    this.items = items
-  }
 }
 
-export class App {
+export interface App {
   id: string
   name: string
-
-  constructor(id: string, name: string) {
-    this.id = id
-    this.name = name
-  }
 }
 
-export class Route {
+export interface Route {
   name: string
   routeUrl: string
   wildcard: boolean
-
-  constructor(name: string, routeUrl: string, wildcard: boolean) {
-    this.name = name
-    this.routeUrl = routeUrl
-    this.wildcard = wildcard
-  }
 }
 
 export class Client {
@@ -144,42 +130,28 @@ export async function deployAs(
   return deploy(previewTomlFile, kvPairs, variables)
 }
 
-export class Metadata {
+export interface Metadata {
   appName: string
   base: string
   version: string
   appRoutes: Route[]
   rawLogs: string
-
-  constructor(
-    appName: string,
-    base: string,
-    version: string,
-    appRoutes: Route[],
-    rawLogs: string
-  ) {
-    this.appName = appName
-    this.base = base
-    this.version = version
-    this.appRoutes = appRoutes
-    this.rawLogs = rawLogs
-  }
 }
 
 export function extractMetadataFromLogs(
   appName: string,
-  logs: string
+  rawLogs: string
 ): Metadata {
   let version = ''
-  const m = logs.match(`Uploading ${appName} version (.*)\\.\\.\\.`)
+  const m = rawLogs.match(`Uploading ${appName} version (.*)\\.\\.\\.`)
   if (m && m.length > 1) {
     version = m[1]
   }
 
   let routeStart = false
   const routeMatcher = `^(.*): (https?:\\/\\/[^\\s^(]+)(.*)`
-  const lines = logs.split('\n')
-  const routes = new Array<Route>()
+  const lines = rawLogs.split('\n')
+  const appRoutes = new Array<Route>()
   let base = ''
 
   for (const line of lines) {
@@ -194,18 +166,26 @@ export function extractMetadataFromLogs(
 
     const matches = line.trim().match(routeMatcher)
     if (matches && matches.length >= 2) {
-      const route = new Route(
-        matches[1],
-        matches[2],
-        matches[3].trim() === '(wildcard)'
-      )
-      routes.push(route)
+      const route: Route = {
+        name: matches[1],
+        routeUrl: matches[2],
+        wildcard: matches[3].trim() === '(wildcard)'
+      }
+      appRoutes.push(route)
     }
   }
 
-  if (routes.length > 0) {
-    base = routes[0].routeUrl
+  if (appRoutes.length > 0) {
+    base = appRoutes[0].routeUrl
   }
 
-  return new Metadata(appName, base, version, routes, logs)
+  const meta: Metadata = {
+    appName,
+    base,
+    version,
+    appRoutes,
+    rawLogs
+  }
+
+  return meta
 }
