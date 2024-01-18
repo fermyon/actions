@@ -13,9 +13,9 @@ async function run(): Promise<void> {
     const token = core.getInput('fermyon_token', {required: true})
     await cloud.login(token)
 
-    const metadata = await actions.deploy()
-    core.setOutput('app-url', metadata.base)
-    core.info(`your app is deployed and available at ${metadata.base}`)
+    const appUrl = await actions.deploy()
+    core.setOutput('app-url', appUrl)
+    core.info(`your app is deployed and available at ${appUrl}`)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
