@@ -98,9 +98,7 @@ export async function deploy(
   manifestFile: string,
   kvPairs: string[],
   variables: string[]
-): Promise<Metadata> {
-  const manifest = spin.getAppManifest(manifestFile)
-
+): Promise<void> {
   const args = ['deploy', '-f', manifestFile]
   for (const kvpair of kvPairs) {
     args.push('--key-value')
@@ -118,8 +116,6 @@ export async function deploy(
       `deploy failed with [status_code: ${result.exitCode}] [stdout: ${result.stdout}] [stderr: ${result.stderr}] `
     )
   }
-
-  return extractMetadataFromLogs(manifest.name, result.stdout)
 }
 
 export async function deployAs(
@@ -127,7 +123,7 @@ export async function deployAs(
   manifestFile: string,
   kvPairs: string[],
   variables: string[]
-): Promise<Metadata> {
+): Promise<void> {
   const manifest = spin.getAppManifest(manifestFile)
   const previewTomlFile = path.join(
     path.dirname(manifestFile),
@@ -140,7 +136,7 @@ export async function deployAs(
   const result = data.replace(re, `name = "${appName}"`)
   fs.writeFileSync(previewTomlFile, result, 'utf8')
 
-  return deploy(previewTomlFile, kvPairs, variables)
+  await deploy(previewTomlFile, kvPairs, variables)
 }
 
 export interface Metadata {

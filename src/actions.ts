@@ -26,11 +26,14 @@ export async function setup(): Promise<void> {
   }
 }
 
-export async function deploy(): Promise<cloud.Metadata> {
+export async function deploy(): Promise<string> {
   const manifestFile = getManifestFile()
   const kvPairs = getKeyValuePairs()
   const variables = getDeployVariables()
-  return cloud.deploy(manifestFile, kvPairs, variables)
+  await cloud.deploy(manifestFile, kvPairs, variables)
+
+  const manifest = spin.getAppManifest(manifestFile)
+  return getDomainForApp(manifest.name)
 }
 
 export async function build(): Promise<void> {
@@ -71,7 +74,7 @@ export async function registryLogin(): Promise<void> {
   )
 }
 
-export async function deployPreview(prNumber: number): Promise<cloud.Metadata> {
+export async function deployPreview(prNumber: number): Promise<string> {
   const manifestFile = getManifestFile()
   const spinConfig = spin.getAppManifest(manifestFile)
 
@@ -81,14 +84,10 @@ export async function deployPreview(prNumber: number): Promise<cloud.Metadata> {
   core.info(`🚀 deploying preview as ${previewAppName} to Fermyon Cloud`)
   const kvPairs = getKeyValuePairs()
   const variables = getDeployVariables()
-  const metadata = await cloud.deployAs(
-    previewAppName,
-    manifestFile,
-    kvPairs,
-    variables
-  )
+  await cloud.deployAs(previewAppName, manifestFile, kvPairs, variables)
 
-  const comment = `🚀 preview deployed successfully to Fermyon Cloud and available at ${metadata.base}`
+  const domain = getDomainForApp(previewAppName)
+  const comment = `🚀 preview deployed successfully to Fermyon Cloud and available at ${domain}`
   core.info(comment)
 
   await github.updateComment(
@@ -97,7 +96,8 @@ export async function deployPreview(prNumber: number): Promise<cloud.Metadata> {
     prNumber,
     comment
   )
-  return metadata
+
+  return domain
 }
 
 export async function undeployPreview(prNumber: number): Promise<void> {
@@ -140,4 +140,19 @@ export function getDeployVariables(): string[] {
   }
 
   return rawVariables.split(/\r|\n/)
+}
+
+export async function getDomainForApp(appName: string): Promise<string> {
+  const cloudToken = core.getInput('fermyon_token', {
+    required: true
+  })
+  const cloudClient = cloud.initClient(cloudToken)
+
+  const app = await cloudClient.getAppByName(appName)
+
+  if (app.domain && app.domain.name) {
+    return `https://${app.domain.name}`
+  }
+
+  return `https://${app.subdomain}`
 }

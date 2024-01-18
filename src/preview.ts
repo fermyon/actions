@@ -18,8 +18,8 @@ async function run(): Promise<void> {
     const token = core.getInput('fermyon_token', {required: true})
     await cloud.login(token)
     await actions.build()
-    const metadata = await actions.deployPreview(prNumber)
-    core.setOutput('app-url', metadata.base)
+    const appUrl = await actions.deployPreview(prNumber)
+    core.setOutput('app-url', appUrl)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
