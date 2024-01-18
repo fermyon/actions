@@ -23404,7 +23404,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.extractMetadataFromLogs = exports.Metadata = exports.deployAs = exports.deploy = exports.login = exports.Client = exports.Route = exports.App = exports.GetAppsResp = exports.initClient = exports.DEFAULT_CLOUD_URL = void 0;
+exports.extractMetadataFromLogs = exports.deployAs = exports.deploy = exports.login = exports.Client = exports.initClient = exports.DEFAULT_CLOUD_URL = void 0;
 const exec = __importStar(__nccwpck_require__(1514));
 const fs = __importStar(__nccwpck_require__(5630));
 const httpm = __importStar(__nccwpck_require__(6255));
@@ -23416,27 +23416,6 @@ function initClient(token) {
     return new Client(token);
 }
 exports.initClient = initClient;
-class GetAppsResp {
-    constructor(items) {
-        this.items = items;
-    }
-}
-exports.GetAppsResp = GetAppsResp;
-class App {
-    constructor(id, name) {
-        this.id = id;
-        this.name = name;
-    }
-}
-exports.App = App;
-class Route {
-    constructor(name, routeUrl, wildcard) {
-        this.name = name;
-        this.routeUrl = routeUrl;
-        this.wildcard = wildcard;
-    }
-}
-exports.Route = Route;
 class Client {
     constructor(token) {
         this.base = exports.DEFAULT_CLOUD_URL;
@@ -23522,26 +23501,16 @@ function deployAs(appName, manifestFile, kvPairs, variables) {
     });
 }
 exports.deployAs = deployAs;
-class Metadata {
-    constructor(appName, base, version, appRoutes, rawLogs) {
-        this.appName = appName;
-        this.base = base;
-        this.version = version;
-        this.appRoutes = appRoutes;
-        this.rawLogs = rawLogs;
-    }
-}
-exports.Metadata = Metadata;
-function extractMetadataFromLogs(appName, logs) {
+function extractMetadataFromLogs(appName, rawLogs) {
     let version = '';
-    const m = logs.match(`Uploading ${appName} version (.*)\\.\\.\\.`);
+    const m = rawLogs.match(`Uploading ${appName} version (.*)\\.\\.\\.`);
     if (m && m.length > 1) {
         version = m[1];
     }
     let routeStart = false;
     const routeMatcher = `^(.*): (https?:\\/\\/[^\\s^(]+)(.*)`;
-    const lines = logs.split('\n');
-    const routes = new Array();
+    const lines = rawLogs.split('\n');
+    const appRoutes = new Array();
     let base = '';
     for (const line of lines) {
         if (!routeStart && line.trim() !== 'Available Routes:') {
@@ -23553,14 +23522,25 @@ function extractMetadataFromLogs(appName, logs) {
         }
         const matches = line.trim().match(routeMatcher);
         if (matches && matches.length >= 2) {
-            const route = new Route(matches[1], matches[2], matches[3].trim() === '(wildcard)');
-            routes.push(route);
+            const route = {
+                name: matches[1],
+                routeUrl: matches[2],
+                wildcard: matches[3].trim() === '(wildcard)'
+            };
+            appRoutes.push(route);
         }
     }
-    if (routes.length > 0) {
-        base = routes[0].routeUrl;
+    if (appRoutes.length > 0) {
+        base = appRoutes[0].routeUrl;
     }
-    return new Metadata(appName, base, version, routes, logs);
+    const meta = {
+        appName,
+        base,
+        version,
+        appRoutes,
+        rawLogs
+    };
+    return meta;
 }
 exports.extractMetadataFromLogs = extractMetadataFromLogs;
 
