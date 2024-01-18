@@ -23240,7 +23240,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getDeployVariables = exports.getKeyValuePairs = exports.undeployPreview = exports.deployPreview = exports.registryLogin = exports.getManifestFile = exports.push = exports.build = exports.deploy = exports.setup = void 0;
+exports.getCloudClient = exports.getDomainForApp = exports.getDeployVariables = exports.getKeyValuePairs = exports.undeployPreview = exports.deployPreview = exports.registryLogin = exports.getManifestFile = exports.push = exports.build = exports.deploy = exports.setup = void 0;
 const cloud = __importStar(__nccwpck_require__(7832));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(978));
@@ -23268,7 +23268,9 @@ function deploy() {
         const manifestFile = getManifestFile();
         const kvPairs = getKeyValuePairs();
         const variables = getDeployVariables();
-        return cloud.deploy(manifestFile, kvPairs, variables);
+        yield cloud.deploy(manifestFile, kvPairs, variables);
+        const manifest = spin.getAppManifest(manifestFile);
+        return getDomainForApp(manifest.name);
     });
 }
 exports.deploy = deploy;
@@ -23317,11 +23319,12 @@ function deployPreview(prNumber) {
         core.info(`🚀 deploying preview as ${previewAppName} to Fermyon Cloud`);
         const kvPairs = getKeyValuePairs();
         const variables = getDeployVariables();
-        const metadata = yield cloud.deployAs(previewAppName, manifestFile, kvPairs, variables);
-        const comment = `🚀 preview deployed successfully to Fermyon Cloud and available at ${metadata.base}`;
+        yield cloud.deployAs(previewAppName, manifestFile, kvPairs, variables);
+        const domain = getDomainForApp(previewAppName);
+        const comment = `🚀 preview deployed successfully to Fermyon Cloud and available at ${domain}`;
         core.info(comment);
         yield github.updateComment(github_1.context.repo.owner, github_1.context.repo.repo, prNumber, comment);
-        return metadata;
+        return domain;
     });
 }
 exports.deployPreview = deployPreview;
@@ -23330,10 +23333,7 @@ function undeployPreview(prNumber) {
         const manifestFile = getManifestFile();
         const spinConfig = spin.getAppManifest(manifestFile);
         const previewAppName = `${spinConfig.name}-pr-${prNumber}`;
-        const cloudToken = core.getInput('fermyon_token', {
-            required: true
-        });
-        const cloudClient = cloud.initClient(cloudToken);
+        const cloudClient = getCloudClient();
         const apps = yield cloudClient.getAllApps();
         const thisPreviewExists = apps.find(item => item.name === previewAppName);
         if (!thisPreviewExists) {
@@ -23362,6 +23362,24 @@ function getDeployVariables() {
     return rawVariables.split(/\r|\n/);
 }
 exports.getDeployVariables = getDeployVariables;
+function getDomainForApp(appName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const cloudClient = getCloudClient();
+        const app = yield cloudClient.getAppByName(appName);
+        if (app.domain && app.domain.name) {
+            return `https://${app.domain.name}`;
+        }
+        return `https://${app.subdomain}`;
+    });
+}
+exports.getDomainForApp = getDomainForApp;
+function getCloudClient() {
+    const cloudToken = core.getInput('fermyon_token', {
+        required: true
+    });
+    return cloud.initClient(cloudToken);
+}
+exports.getCloudClient = getCloudClient;
 
 
 /***/ }),
@@ -23404,7 +23422,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.extractMetadataFromLogs = exports.deployAs = exports.deploy = exports.login = exports.Client = exports.initClient = exports.DEFAULT_CLOUD_URL = void 0;
+exports.deployAs = exports.deploy = exports.login = exports.Client = exports.initClient = exports.DEFAULT_CLOUD_URL = void 0;
 const exec = __importStar(__nccwpck_require__(1514));
 const fs = __importStar(__nccwpck_require__(5630));
 const httpm = __importStar(__nccwpck_require__(6255));
@@ -23436,13 +23454,19 @@ class Client {
             return appsResp.items;
         });
     }
-    getAppIdByName(name) {
+    getAppByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
             const apps = yield this.getAllApps();
             const app = apps.find(item => item.name === name);
             if (!app) {
                 throw new Error(`no app found with name ${name}`);
             }
+            return app;
+        });
+    }
+    getAppIdByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const app = yield this.getAppByName(name);
             return app.id;
         });
     }
@@ -23470,7 +23494,6 @@ function login(token) {
 exports.login = login;
 function deploy(manifestFile, kvPairs, variables) {
     return __awaiter(this, void 0, void 0, function* () {
-        const manifest = spin.getAppManifest(manifestFile);
         const args = ['deploy', '-f', manifestFile];
         for (const kvpair of kvPairs) {
             args.push('--key-value');
@@ -23484,7 +23507,6 @@ function deploy(manifestFile, kvPairs, variables) {
         if (result.exitCode !== 0) {
             throw new Error(`deploy failed with [status_code: ${result.exitCode}] [stdout: ${result.stdout}] [stderr: ${result.stderr}] `);
         }
-        return extractMetadataFromLogs(manifest.name, result.stdout);
     });
 }
 exports.deploy = deploy;
@@ -23497,52 +23519,10 @@ function deployAs(appName, manifestFile, kvPairs, variables) {
         const re = new RegExp(`name = "${manifest.name}"`, 'g');
         const result = data.replace(re, `name = "${appName}"`);
         fs.writeFileSync(previewTomlFile, result, 'utf8');
-        return deploy(previewTomlFile, kvPairs, variables);
+        yield deploy(previewTomlFile, kvPairs, variables);
     });
 }
 exports.deployAs = deployAs;
-function extractMetadataFromLogs(appName, rawLogs) {
-    let version = '';
-    const m = rawLogs.match(`Uploading ${appName} version (.*)\\.\\.\\.`);
-    if (m && m.length > 1) {
-        version = m[1];
-    }
-    let routeStart = false;
-    const routeMatcher = `^(.*): (https?:\\/\\/[^\\s^(]+)(.*)`;
-    const lines = rawLogs.split('\n');
-    const appRoutes = new Array();
-    let base = '';
-    for (const line of lines) {
-        if (!routeStart && line.trim() !== 'Available Routes:') {
-            continue;
-        }
-        if (!routeStart) {
-            routeStart = true;
-            continue;
-        }
-        const matches = line.trim().match(routeMatcher);
-        if (matches && matches.length >= 2) {
-            const route = {
-                name: matches[1],
-                routeUrl: matches[2],
-                wildcard: matches[3].trim() === '(wildcard)'
-            };
-            appRoutes.push(route);
-        }
-    }
-    if (appRoutes.length > 0) {
-        base = appRoutes[0].routeUrl;
-    }
-    const meta = {
-        appName,
-        base,
-        version,
-        appRoutes,
-        rawLogs
-    };
-    return meta;
-}
-exports.extractMetadataFromLogs = extractMetadataFromLogs;
 
 
 /***/ }),
@@ -23597,9 +23577,9 @@ function run() {
             }
             const token = core.getInput('fermyon_token', { required: true });
             yield cloud.login(token);
-            const metadata = yield actions.deploy();
-            core.setOutput('app-url', metadata.base);
-            core.info(`your app is deployed and available at ${metadata.base}`);
+            const appUrl = yield actions.deploy();
+            core.setOutput('app-url', appUrl);
+            core.info(`your app is deployed and available at ${appUrl}`);
         }
         catch (error) {
             if (error instanceof Error)
