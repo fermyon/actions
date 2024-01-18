@@ -62,13 +62,18 @@ export class Client {
     return appsResp.items
   }
 
-  async getAppIdByName(name: string): Promise<string> {
+  async getAppByName(name: string): Promise<App> {
     const apps = await this.getAllApps()
     const app = apps.find(item => item.name === name)
     if (!app) {
       throw new Error(`no app found with name ${name}`)
     }
 
+    return app
+  }
+
+  async getAppIdByName(name: string): Promise<string> {
+    const app = await this.getAppByName(name)
     return app.id
   }
 
