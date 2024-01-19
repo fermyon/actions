@@ -23320,7 +23320,7 @@ function deployPreview(prNumber) {
         const kvPairs = getKeyValuePairs();
         const variables = getDeployVariables();
         yield cloud.deployAs(previewAppName, manifestFile, kvPairs, variables);
-        const domain = getDomainForApp(previewAppName);
+        const domain = yield getDomainForApp(previewAppName);
         const comment = `🚀 preview deployed successfully to Fermyon Cloud and available at ${domain}`;
         core.info(comment);
         yield github.updateComment(github_1.context.repo.owner, github_1.context.repo.repo, prNumber, comment);

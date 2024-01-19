@@ -86,7 +86,7 @@ export async function deployPreview(prNumber: number): Promise<string> {
   const variables = getDeployVariables()
   await cloud.deployAs(previewAppName, manifestFile, kvPairs, variables)
 
-  const domain = getDomainForApp(previewAppName)
+  const domain = await getDomainForApp(previewAppName)
   const comment = `🚀 preview deployed successfully to Fermyon Cloud and available at ${domain}`
   core.info(comment)
 
