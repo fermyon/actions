@@ -13,5 +13,5 @@ inputs:
     required: false
     description: 'When downloading Spin, GitHub may rate limit anonymous downloads. Set this to use authenticated downloads, which are are subject to a higher limits.'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: '../../dist/spin/setup/index.js'

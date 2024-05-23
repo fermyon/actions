@@ -25,5 +25,5 @@ outputs:
   app-url:
     description: 'the URL of the deployed preview app'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: '../../dist/spin/preview/index.js'

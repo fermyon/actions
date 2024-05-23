@@ -22,5 +22,5 @@ outputs:
   digest:
     description: 'The image digest of the pushed app e.g. sha256:...'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: '../../dist/spin/push/index.js'
