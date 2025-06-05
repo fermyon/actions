@@ -17,7 +17,11 @@ async function run(): Promise<void> {
 
     const token = core.getInput('fermyon_token', {required: true})
     await cloud.login(token)
-    await actions.build()
+    const buildEnabled =
+      core.getBooleanInput('run_build') === false ? false : true
+    if (buildEnabled) {
+      await actions.build()
+    }
     const appUrl = await actions.deployPreview(prNumber)
     core.setOutput('app-url', appUrl)
   } catch (error) {

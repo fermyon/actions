@@ -23975,7 +23975,10 @@ function run() {
             }
             const token = core.getInput('fermyon_token', { required: true });
             yield cloud.login(token);
-            yield actions.build();
+            const buildEnabled = core.getBooleanInput('run_build') === false ? false : true;
+            if (buildEnabled) {
+                yield actions.build();
+            }
             const appUrl = yield actions.deployPreview(prNumber);
             core.setOutput('app-url', appUrl);
         }
