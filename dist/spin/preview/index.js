@@ -23541,7 +23541,7 @@ function login(token) {
 exports.login = login;
 function deploy(manifestFile, kvPairs, variables) {
     return __awaiter(this, void 0, void 0, function* () {
-        const args = ['deploy', '-f', manifestFile];
+        const args = ['cloud', 'deploy', '-f', manifestFile];
         for (const kvpair of kvPairs) {
             args.push('--key-value');
             args.push(kvpair);

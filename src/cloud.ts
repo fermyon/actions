@@ -99,7 +99,7 @@ export async function deploy(
   kvPairs: string[],
   variables: string[]
 ): Promise<void> {
-  const args = ['deploy', '-f', manifestFile]
+  const args = ['cloud', 'deploy', '-f', manifestFile]
   for (const kvpair of kvPairs) {
     args.push('--key-value')
     args.push(kvpair)
